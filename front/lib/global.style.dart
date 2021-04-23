@@ -10,6 +10,13 @@ class GlobalStyles {
     'light-gray': Color.fromRGBO(91, 91, 92, 1),
   };
 
+  static final titleTextGradient = GoogleFonts.raleway(
+      fontSize: 50.0,
+      fontWeight: FontWeight.w400,
+      foreground: Paint()
+        ..shader = GlobalStyles.standardGradient
+            .createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)));
+
   static final standardText = GoogleFonts.raleway(
     color: Colors.white,
     fontSize: 30,
@@ -43,11 +50,13 @@ class GlobalStyles {
     0.695
   ], transform: GradientRotation(2.13959913 * pi));
 
-  static final standardTextField = InputDecoration(
-      focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide:
-              BorderSide(color: GlobalStyles.rgbColors['dark-gray'], width: 2)),
-      border: OutlineInputBorder(),
-      hintText: 'Email');
+  static standardTextField(helperText) {
+    return InputDecoration(
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+                color: GlobalStyles.rgbColors['dark-gray'], width: 2)),
+        border: OutlineInputBorder(),
+        hintText: helperText);
+  }
 }
