@@ -19,6 +19,5 @@ final styles = {
     color: Colors.white,
     fontSize: 30,
     fontWeight: FontWeight.w400,
-  ),
-  'appbar-background': Color.fromRGBO(50, 50, 50, 1)
+  )
 };
