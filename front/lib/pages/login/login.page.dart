@@ -8,7 +8,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _visible = true;
+  String _email;
+  String _password;
+  bool _isValidating = false;
+
   final linearGradient = LinearGradient(colors: [
     Color.fromRGBO(100, 100, 94, 0.695),
     Color.fromRGBO(73, 72, 74, 0.695),
@@ -30,60 +33,87 @@ class _LoginPageState extends State<LoginPage> {
         ),
         backgroundColor: styles['appbar-background'],
       ),
-      body: Container(
-        decoration: BoxDecoration(gradient: linearGradient),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 50),
-                  child: Text(
-                    'Welcome to CTracker App!',
-                    style: styles['welcome-text'],
+      body: _isValidating
+          ? Container(
+              decoration: BoxDecoration(gradient: linearGradient),
+              child: Center(
+                child: SizedBox(
+                  height: 100,
+                  width: 100,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 5,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Color.fromRGBO(50, 50, 50, 1)),
                   ),
                 ),
-                Wrap(
-                  spacing: 10,
-                  direction: Axis.vertical,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: TextField(
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(), hintText: 'Email')),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: TextField(
-                          obscureText: true,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Password')),
-                    )
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: ElevatedButton(
-                    onPressed: () => setState(() => {_visible = !_visible}),
-                    child: Text('Login'),
-                    style: styles['button'],
+              ),
+            )
+          : Container(
+              decoration: BoxDecoration(gradient: linearGradient),
+              child: Center(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 50),
+                        child: Text(
+                          'Welcome to CTracker App!',
+                          style: styles['welcome-text'],
+                        ),
+                      ),
+                      Wrap(
+                        spacing: 10,
+                        direction: Axis.vertical,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: TextField(
+                                onChanged: (text) {
+                                  setState(() {
+                                    _email = text;
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Email')),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: TextField(
+                                onChanged: (text) {
+                                  setState(() {
+                                    _password = text;
+                                  });
+                                },
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Password')),
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              setState(() => {_isValidating = true}),
+                          child: Text('Login'),
+                          style: styles['button'],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: ElevatedButton(
+                          onPressed: () => setState(() => {}),
+                          child: Text('Cancel'),
+                          style: styles['button'],
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: ElevatedButton(
-                    onPressed: () => setState(() => {}),
-                    child: Text('Cancel'),
-                    style: styles['button'],
-                  ),
-                )
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
