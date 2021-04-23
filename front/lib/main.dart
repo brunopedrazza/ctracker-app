@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/pages/home.page.dart';
 import './pages/login.page.dart';
 import './pages/splash.page.dart';
 
@@ -17,7 +18,8 @@ class CTracker extends StatelessWidget {
       ),
       home: SplashPage(),
       routes: <String, WidgetBuilder>{
-        '/login': (BuildContext context) => LoginPage()
+        '/login': (BuildContext context) => LoginPage(),
+        '/home': (BuildContext context) => HomePage()
       },
     );
   }
