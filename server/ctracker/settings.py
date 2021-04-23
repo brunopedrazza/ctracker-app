@@ -37,6 +37,11 @@ ALLOWED_HOSTS = env.list(
 
 SERVER_API_KEY = env("SERVER_API_KEY")
 
+# Time definition
+
+DAYS_BEFORE_NOTIFICATION = env.int("DAYS_BEFORE_NOTIFICATION", default=5)
+DAYS_TO_LIMIT_NOTIFICATION = env.int("DAYS_TO_LIMIT_NOTIFICATION", default=20)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -137,3 +142,33 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Logging
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} - {levelname}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "ctracker": {
+            "handlers": ["console"],
+            "level": "DEBUG"
+        },
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO"
+        },
+    },
+}
