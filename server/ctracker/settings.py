@@ -35,6 +35,8 @@ ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "[::1]", "0.0.0.0"]
 )
 
+SERVER_JWT_KEY = env("SERVER_JWT_KEY")
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -83,26 +85,16 @@ WSGI_APPLICATION = 'ctracker.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': env('MONGODB_NAME', default=''),
-        'ENFORCE_SCHEMA': False,
-        'CLIENT': {
-            'host': env('MONGODB_HOST', default='localhost'),
-            'port': env.int('MONGODB_PORT', default=27017),
-            'username': env('MONGODB_USER', default=''),
-            'password': env('MONGODB_PASSWORD', default=''),
-            'authSource': env('MONGODB_AUTHSOURCE', default=''),
-            'authMechanism': 'SCRAM-SHA-1'
-        },
-        'LOGGING': {
-            'version': 1,
-            'loggers': {
-                'djongo': {
-                    'level': 'DEBUG',
-                    'propagate': False,
-                }
-            },
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("POSTGRES_DB", default=""),
+        "USER": env("POSTGRES_USER", default=""),
+        "PASSWORD": env("POSTGRES_PASSWORD", default=""),
+        "HOST": env("POSTGRES_HOST", default=""),
+        "PORT": env.int("POSTGRES_PORT", default=""),
+        "CONN_MAX_AGE": 30,
+        "OPTIONS": {
+            "sslmode": "allow",
         },
     }
 }
