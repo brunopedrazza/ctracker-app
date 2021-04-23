@@ -6,14 +6,12 @@ from .models import UserLogin, UserRegister, UserUpdate
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
 
-from ..api.authorization import (
-    validate_token,
-)
+from ..api.authorization import validate_api_key
 
 
 @api_view(["POST"])
 @renderer_classes([JSONRenderer])
-# @validate_token()
+@validate_api_key()
 def login(request: Request) -> Response:
     try:
         data = request.data
@@ -32,7 +30,7 @@ def login(request: Request) -> Response:
 
 @api_view(["POST"])
 @renderer_classes([JSONRenderer])
-# @validate_token()
+@validate_api_key()
 def register(request: Request) -> Response:
     try:
         data = request.data
@@ -49,7 +47,7 @@ def register(request: Request) -> Response:
 
 @api_view(["POST"])
 @renderer_classes([JSONRenderer])
-# @validate_token()
+@validate_api_key()
 def update(request: Request, email: str) -> Response:
     try:
         data = request.data
@@ -68,7 +66,7 @@ def update(request: Request, email: str) -> Response:
 
 @api_view(["GET"])
 @renderer_classes([JSONRenderer])
-# @validate_token()
+@validate_api_key()
 def get(request: Request, email: str) -> Response:
     try:
         user = get_user(email)

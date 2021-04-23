@@ -35,7 +35,7 @@ ALLOWED_HOSTS = env.list(
     "DJANGO_ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "[::1]", "0.0.0.0"]
 )
 
-SERVER_JWT_KEY = env("SERVER_JWT_KEY")
+SERVER_API_KEY = env("SERVER_API_KEY")
 
 # Application definition
 
