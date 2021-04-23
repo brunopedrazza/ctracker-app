@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:front/pages/login/login.page.dart';
-import 'package:front/pages/splash/splash.page.dart';
+import './pages/login.page.dart';
+import './pages/splash.page.dart';
 
 void main() {
   runApp(CTracker());
@@ -16,6 +16,9 @@ class CTracker extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: SplashPage(),
+      routes: <String, WidgetBuilder>{
+        '/login': (BuildContext context) => LoginPage()
+      },
     );
   }
 }

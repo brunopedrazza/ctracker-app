@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
           icon: Icon(Icons.arrow_back_rounded),
           tooltip: 'Go Back',
           onPressed: () {
-            // pop
+            Navigator.pop(context);
           },
         ),
         backgroundColor: GlobalStyles.rgbColors['dark-gray'],
@@ -56,12 +56,12 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 50),
                         child: Text(
-                          'Welcome to CTracker App!',
-                          style: GlobalStyles.boldText,
+                          'Login',
+                          style: GlobalStyles.titleTextGradient,
                         ),
                       ),
                       _userInputs(context, setPassword, setEmail),
-                      _buttons(setValidating)
+                      _buttons(context, setValidating)
                     ],
                   ),
                 ),
@@ -103,7 +103,7 @@ _userInputs(
             onChanged: (text) {
               setPassword(text);
             },
-            decoration: GlobalStyles.standardTextField),
+            decoration: GlobalStyles.standardTextField('Email')),
       ),
       Container(
         width: MediaQuery.of(context).size.width * 0.8,
@@ -112,13 +112,13 @@ _userInputs(
               setEmail(text);
             },
             obscureText: true,
-            decoration: GlobalStyles.standardTextField),
+            decoration: GlobalStyles.standardTextField('Password')),
       )
     ],
   );
 }
 
-_buttons(setValidating) {
+_buttons(context, setValidating) {
   return Wrap(spacing: 10, direction: Axis.vertical, children: [
     Padding(
       padding: const EdgeInsets.only(top: 20),
@@ -129,7 +129,7 @@ _buttons(setValidating) {
       ),
     ),
     ElevatedButton(
-      onPressed: () => setValidating(),
+      onPressed: () => Navigator.pop(context),
       child: Text('Cancel'),
       style: GlobalStyles.standardButton,
     )

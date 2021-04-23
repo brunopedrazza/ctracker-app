@@ -26,17 +26,18 @@ class _SplashPageState extends State<SplashPage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 150, bottom: 150),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 100, horizontal: 42),
                 child: Text(
                   'Welcome to CTracker App!',
-                  style: GlobalStyles.boldText,
+                  style: GlobalStyles.titleTextGradient,
                 ),
               ),
               AnimatedOpacity(
                 opacity: _visible ? 1.0 : 0.0,
                 duration: Duration(milliseconds: 500),
                 child: ElevatedButton(
-                  onPressed: () => setState(() => {_visible = !_visible}),
+                  onPressed: () => Navigator.pushNamed(context, '/login'),
                   child: Text('Login'),
                   style: GlobalStyles.standardButton,
                 ),
