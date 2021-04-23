@@ -23,10 +23,23 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  setValidating(text) {
+  validateInputs() async {
+    // check if email is valid
+    // if (!_email.contains('@')) {
+    //   // indicate error on field
+    //   return;
+    // }
+
     setState(() {
       _isValidating = true;
     });
+    await Future.delayed(const Duration(seconds: 1), () {});
+    // if valid, push(/home)
+    //
+    setState(() {
+      _isValidating = false;
+    });
+    Navigator.pushNamed(context, '/home');
   }
 
   @override
@@ -61,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       _userInputs(context, setPassword, setEmail),
-                      _buttons(context, setValidating)
+                      _buttons(context, validateInputs)
                     ],
                   ),
                 ),
@@ -118,12 +131,12 @@ _userInputs(
   );
 }
 
-_buttons(context, setValidating) {
+_buttons(context, validateInputs) {
   return Wrap(spacing: 10, direction: Axis.vertical, children: [
     Padding(
       padding: const EdgeInsets.only(top: 20),
       child: ElevatedButton(
-        onPressed: () => setValidating(),
+        onPressed: () => validateInputs(),
         child: Text('Login'),
         style: GlobalStyles.standardButton,
       ),
