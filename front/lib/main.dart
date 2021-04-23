@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/pages/login/login.page.dart';
+import 'package:front/pages/splash/splash.page.dart';
 
 void main() {
   runApp(CTracker());
@@ -14,7 +15,7 @@ class CTracker extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: SplashPage(),
     );
   }
 }

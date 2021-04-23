@@ -1,6 +1,4 @@
 import 'package:front/global.style.dart';
-
-import './login.styles.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -44,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
             // pop
           },
         ),
-        backgroundColor: styles['appbar-background'],
+        backgroundColor: GlobalStyles.rgbColors['dark-gray'],
       ),
       body: _isValidating
           ? _progressIndicator()
