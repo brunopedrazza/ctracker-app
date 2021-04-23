@@ -1,13 +1,13 @@
 import 'dart:math';
-import './splash.styles.dart';
+import 'package:front/global.style.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class SplashPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SplashPageState createState() => _SplashPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SplashPageState extends State<SplashPage> {
   bool _visible = true;
   final linearGradient = LinearGradient(colors: [
     Color.fromRGBO(100, 100, 94, 0.695),
@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(top: 150, bottom: 150),
                 child: Text(
                   'Welcome to CTracker App!',
-                  style: styles['welcome-text'],
+                  style: GlobalStyles.boldText,
                 ),
               ),
               AnimatedOpacity(
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   onPressed: () => setState(() => {_visible = !_visible}),
                   child: Text('Login'),
-                  style: styles['button'],
+                  style: GlobalStyles.standardButton,
                 ),
               ),
               Padding(
@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   onPressed: () => setState(() => {}),
                   child: Text('Sign Up'),
-                  style: styles['button'],
+                  style: GlobalStyles.standardButton,
                 ),
               )
             ],
