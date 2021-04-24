@@ -24,10 +24,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     try {
-      final countryData = fetchdata().then((value) => setState(() {
-            print(value);
-            this.countries.add(value);
-          }));
+      CovidDataAPI().fetchDataMultipleCountries(['brazil', 'italy']).then(
+          (countryListData) => setState(() {
+                print(countryListData);
+                this.countries = countryListData;
+              }));
     } catch (e) {
       setState(() {
         requestError = true;
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                   style: GlobalStyles.titleTextGradient,
                 ),
               ),
-              Text('Here are the latest COVID-19 statistics.'),
+              Text('Here are some of the latest COVID-19 statistics.'),
               Expanded(
                   child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -70,13 +71,11 @@ class _HomePageState extends State<HomePage> {
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   crossAxisCount: 2,
-                  children: [
-                    CountryCard(
-                      country: this.countries[0],
-                    ),
-                    CountryCard(country: this.countries[0]),
-                    CountryCard(country: this.countries[0])
-                  ],
+                  children: countries
+                      .map((country) => CountryCard(
+                            country: country,
+                          ))
+                      .toList(),
                 ),
               )),
               requestError ? Text('erro HTTP') : Text('dados buscados')
