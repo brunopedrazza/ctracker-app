@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:front/apis/covid-data.api.dart';
 import 'package:front/models/country-data.model.dart';
-import '../global.style.dart';
+import 'package:front/pages/home/widgets/country-card.widget.dart';
+import '../../global.style.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -61,7 +62,23 @@ class _HomePageState extends State<HomePage> {
                   style: GlobalStyles.titleTextGradient,
                 ),
               ),
-              Text('Here are the latest COVID-19 news.'),
+              Text('Here are the latest COVID-19 statistics.'),
+              Expanded(
+                  child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: GridView.count(
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                  crossAxisCount: 2,
+                  children: [
+                    CountryCard(
+                      country: this.countries[0],
+                    ),
+                    CountryCard(country: this.countries[0]),
+                    CountryCard(country: this.countries[0])
+                  ],
+                ),
+              )),
               requestError ? Text('erro HTTP') : Text('dados buscados')
             ],
           ),
