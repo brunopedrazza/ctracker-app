@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:front/pages/home/home.page.dart';
 import './pages/login.page.dart';
 import './pages/splash.page.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  await DotEnv().load('.env');
   runApp(CTracker());
 }
 
 class CTracker extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -17,6 +17,20 @@ class GlobalStyles {
         ..shader = GlobalStyles.standardGradient
             .createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)));
 
+  static final subtitleTextGradient = GoogleFonts.raleway(
+      fontSize: 30.0,
+      fontWeight: FontWeight.w600,
+      foreground: Paint()
+        ..shader = GlobalStyles.standardGradient
+            .createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)));
+
+  static final standardSubtextGradient = GoogleFonts.raleway(
+      fontSize: 16.0,
+      fontWeight: FontWeight.w600,
+      foreground: Paint()
+        ..shader = GlobalStyles.standardGradient
+            .createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)));
+
   static final standardText = GoogleFonts.raleway(
     color: Colors.white,
     fontSize: 30,
