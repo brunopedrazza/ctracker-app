@@ -8,9 +8,7 @@ class CovidDataAPI {
     final response = await http.get(
         Uri.https(
             'covid-19-data.p.rapidapi.com', '/country', {'name': countryName}),
-        headers: {
-          'x-rapidapi-key': '5b8957a382msh2d23f669b923e9ep150b64jsn1408a53a8c56'
-        });
+        headers: {'x-rapidapi-key': ''});
 
     return response;
   }
