@@ -31,7 +31,7 @@ class UserRegister(object):
         if not self.last_name:
             raise RuntimeError("last name cannot be empty")
         self.birthdate = datetime.strptime(kwargs["birthdate"], "%d/%m/%Y")
-        if self.birthdate > utc_now():
+        if self.birthdate > datetime.now():
             raise RuntimeError("invalid birthdate")
         self.email = kwargs["email"]
         if is_invalid_email(self.email):
