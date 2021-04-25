@@ -2,18 +2,18 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import status
 
 from rest_framework.request import Request
-from .utils import ApiResponse as Response, notify_sickness
-from .models import NotifySickness
+from ctracker.api.utils import ApiResponse as Response, notify_sickness
+from ctracker.api.models import NotifySickness
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.renderers import JSONRenderer
 
-from ..api.authorization import validate_api_key
+from ctracker.api.authorization import validate_api_key
 
 
 @api_view(["POST"])
 @renderer_classes([JSONRenderer])
 @validate_api_key()
-def post(request: Request) -> Response:
+def post_notification(request: Request) -> Response:
     try:
         data = request.data
         notification = NotifySickness(**data)
