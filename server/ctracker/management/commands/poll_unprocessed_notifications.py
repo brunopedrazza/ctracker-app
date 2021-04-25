@@ -15,7 +15,7 @@ from django.conf import settings as server_settings
 from ctracker.models import SicknessNotification, UserPlaceRegister
 
 TERMINATE = False
-DEFAULT_INTERVAL = 10
+DEFAULT_INTERVAL = 30
 
 logger = getLogger(__name__)
 
@@ -113,11 +113,9 @@ class Command(BaseCommand):
                     .all()
                 )
                 for register in registers_to_notify:
+                    register.number_of_notifications += 1
                     register.has_to_notify = True
                     register.save()
 
             notification.is_processed = True
             notification.save()
-
-        # TODO: Send this registers to frontend in order to notify users
-

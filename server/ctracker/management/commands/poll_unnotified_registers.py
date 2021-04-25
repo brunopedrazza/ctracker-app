@@ -1,25 +1,19 @@
 import sys
 import signal
 import time
-from datetime import datetime, timedelta, timezone
 from logging import getLogger
 
-from django.core.exceptions import ObjectDoesNotExist
+from typing import List
+
 from django.core.management import BaseCommand
 from django.db.utils import InterfaceError
 
-from django.conf import settings as server_settings
-
-from ctracker.models import SicknessNotification, User
+from ctracker.models import SicknessNotification, UserPlaceRegister
 
 TERMINATE = False
 DEFAULT_INTERVAL = 60
 
 logger = getLogger(__name__)
-
-
-def utc_now():
-    return datetime.now(timezone.utc)
 
 
 class Command(BaseCommand):
@@ -30,7 +24,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def exit_gracefully(sig, frame):
-        logger.info("Exiting check_enable_notification...")
+        logger.info("Exiting poll_unnotified_registers...")
         module = sys.modules[__name__]
         module.TERMINATE = True
 
@@ -63,31 +57,33 @@ class Command(BaseCommand):
                 if module.TERMINATE:
                     break
                 try:
-                    self.check_enable_notification()
+                    self.poll_unnotified_registers()
                 except InterfaceError as ie:
-                    logger.exception("check_enable_notification() error when connecting to database")
+                    logger.exception("poll_unnotified_registers() error when connecting to database")
                     pass
                 except Exception as e:
                     # This is very likely a bug, so re-raise the error and crash.
                     # Heroku will restart the process unless it is repeatedly crashing,
                     # in which case restarting isn't of much use.
-                    logger.exception("check_enable_notification() from connector threw an unexpected exception")
+                    logger.exception("poll_unnotified_registers() from connector threw an unexpected exception")
                     pass
                 self.sleep(options.get("interval") or DEFAULT_INTERVAL)
         else:
-            self.check_enable_notification()
+            self.poll_unnotified_registers()
 
     @staticmethod
-    def check_enable_notification():
-        logger.debug("Executing check_enable_notification")
+    def poll_unnotified_registers():
+        logger.debug("Executing poll_unnotified_registers")
 
-        now = utc_now()
-        x_days_ago = now - timedelta(days=server_settings.DAYS_TO_LIMIT_NOTIFICATION)
+        unnotified_registers: List[UserPlaceRegister] = (
+            UserPlaceRegister.objects
+            .select_related("user")
+            .filter(has_to_notify=True)
+            .all()
+        )
 
-        users_notification_disabled = User.objects.exclude(notification_enabled=True).all()
-        for user in users_notification_disabled:
-            try:
-                SicknessNotification.objects.get(user=user, created_at__gte=x_days_ago)
-            except ObjectDoesNotExist:
-                user.notification_enabled = True
-                user.save()
+        # TODO: Send this registers to frontend in order to notify users
+
+        for register in unnotified_registers:
+            register.has_to_notify = False
+            register.save()
