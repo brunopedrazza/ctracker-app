@@ -79,8 +79,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def check_enable_notification():
-        logger.debug("Executing check_enable_notification")
-
         now = utc_now()
         x_days_ago = now - timedelta(days=server_settings.DAYS_TO_LIMIT_NOTIFICATION)
 
@@ -89,5 +87,6 @@ class Command(BaseCommand):
             try:
                 SicknessNotification.objects.get(user=user, created_at__gte=x_days_ago)
             except ObjectDoesNotExist:
+                logger.info(f"Enabling notification from user {user}")
                 user.notification_enabled = True
                 user.save()

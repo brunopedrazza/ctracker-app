@@ -73,8 +73,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def poll_unnotified_registers():
-        logger.debug("Executing poll_unnotified_registers")
-
         unnotified_registers: List[UserPlaceRegister] = (
             UserPlaceRegister.objects
             .select_related("user")
@@ -85,5 +83,6 @@ class Command(BaseCommand):
         # TODO: Send this registers to frontend in order to notify users
 
         for register in unnotified_registers:
+            logger.info(f"Place register {register} was notified")
             register.has_to_notify = False
             register.save()

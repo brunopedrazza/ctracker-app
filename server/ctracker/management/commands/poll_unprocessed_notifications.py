@@ -77,8 +77,6 @@ class Command(BaseCommand):
 
     @staticmethod
     def poll_unprocessed_notifications():
-        logger.debug("Executing poll_unprocessed_notifications")
-
         unprocessed_notifications: List[SicknessNotification] = (
             SicknessNotification.objects
             .select_related("user")
@@ -88,6 +86,7 @@ class Command(BaseCommand):
         )
 
         for notification in unprocessed_notifications:
+            logger.debug(f"Processing notification {notification}")
             x_days_ago = notification.created_at - timedelta(days=server_settings.DAYS_BEFORE_NOTIFICATION)
             places_user_has_been = UserPlaceRegister.objects.filter(
                 user=notification.user,
@@ -113,9 +112,11 @@ class Command(BaseCommand):
                     .all()
                 )
                 for register in registers_to_notify:
+                    logger.debug(f"Indicate that {register} needs to be notified")
                     register.number_of_notifications += 1
                     register.has_to_notify = True
                     register.save()
 
+            logger.debug(f"Notification {notification} was processed")
             notification.is_processed = True
             notification.save()
