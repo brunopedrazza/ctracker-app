@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Load environment variables from .env
 env = environ.Env()
-env_file = os.path.join(BASE_DIR, ".env")
+env_file = os.path.join(BASE_DIR, "ctracker/.env")
 if os.path.exists(env_file):
     environ.Env.read_env(env_file)
 
@@ -92,11 +92,11 @@ WSGI_APPLICATION = 'ctracker.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB", default=""),
-        "USER": env("POSTGRES_USER", default=""),
-        "PASSWORD": env("POSTGRES_PASSWORD", default=""),
-        "HOST": env("POSTGRES_HOST", default=""),
-        "PORT": env.int("POSTGRES_PORT", default=""),
+        "NAME": env("POSTGRES_DB", default="ctracker-dev"),
+        "USER": env("POSTGRES_USER", default="postgres"),
+        "PASSWORD": env("POSTGRES_PASSWORD", default="password"),
+        "HOST": env("POSTGRES_HOST", default="localhost"),
+        "PORT": env.int("POSTGRES_PORT", default="5432"),
         "CONN_MAX_AGE": 30,
         "OPTIONS": {
             "sslmode": "allow",
@@ -141,7 +141,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "ctracker/static")
+STATIC_URL = "/static/"
 
 # Logging
 
