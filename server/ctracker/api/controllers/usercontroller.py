@@ -1,7 +1,7 @@
 from rest_framework import status
 
-from .utils import ApiResponse as Response, authenticate_user, register_user, update_user, get_user
-from .models import UserLogin, UserRegister, UserUpdate
+from ctracker.api.utils import ApiResponse as Response, authenticate_user, register_user, update_user, get_user
+from ctracker.api.models import UserLogin, UserRegister, UserUpdate
 
 from rest_framework.request import Request
 from rest_framework.decorators import api_view, renderer_classes
@@ -9,7 +9,7 @@ from rest_framework.renderers import JSONRenderer
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from ..api.authorization import validate_api_key
+from ctracker.api.authorization import validate_api_key
 
 
 @api_view(["POST"])

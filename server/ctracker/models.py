@@ -48,6 +48,7 @@ class UserPlaceRegister(models.Model):
     arrival_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     departure_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     place_id = models.TextField()
+    number_of_notifications = models.IntegerField(default=0)
 
     class Meta:
         app_label = "ctracker"
@@ -55,6 +56,15 @@ class UserPlaceRegister(models.Model):
 
     def __str__(self):
         return f"{self.user.name} ({self.place_id})"
+
+    def to_dict(self):
+        return {
+            "user_email": self.user.email,
+            "arrival_date": self.arrival_date,
+            "departure_date": self.departure_date,
+            "place_id": self.place_id,
+            "number_of_notifications": self.number_of_notifications
+        }
 
 
 class SicknessNotification(models.Model):
