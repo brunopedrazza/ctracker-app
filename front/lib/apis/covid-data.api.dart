@@ -14,7 +14,9 @@ class CovidDataAPI {
         final response = await http.get(
             Uri.https('covid-19-data.p.rapidapi.com', '/country',
                 {'name': countryName}),
-            headers: {'x-rapidapi-key': DotEnv().env['APIKEY']});
+            headers: {
+              'x-rapidapi-key': '' //@here
+            });
 
         if (response.statusCode >= 400) {
           throw new Error();

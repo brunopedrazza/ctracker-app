@@ -45,7 +45,7 @@ class _SplashPageState extends State<SplashPage> {
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: ElevatedButton(
-                  onPressed: () => setState(() => {}),
+                  onPressed: () => Navigator.pushNamed(context, '/signup'),
                   child: Text('Sign Up'),
                   style: GlobalStyles.standardButton,
                 ),
