@@ -66,9 +66,6 @@ class Command(BaseCommand):
                     logger.exception("poll_unprocessed_notifications() error when connecting to database")
                     pass
                 except Exception as e:
-                    # This is very likely a bug, so re-raise the error and crash.
-                    # Heroku will restart the process unless it is repeatedly crashing,
-                    # in which case restarting isn't of much use.
                     logger.exception("poll_unprocessed_notifications() from connector threw an unexpected exception")
                     pass
                 self.sleep(options.get("interval") or DEFAULT_INTERVAL)
