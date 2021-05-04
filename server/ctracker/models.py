@@ -59,7 +59,6 @@ class UserPlaceRegister(models.Model):
 
     def to_dict(self):
         return {
-            "user_email": self.user.email,
             "arrival_date": self.arrival_date,
             "departure_date": self.departure_date,
             "place_id": self.place_id,
