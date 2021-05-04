@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/pages/home/home.page.dart';
+import 'package:front/pages/signup.page.dart';
 import './pages/login.page.dart';
 import './pages/splash.page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -20,6 +21,7 @@ class CTracker extends StatelessWidget {
       home: SplashPage(),
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => LoginPage(),
+        '/signup': (BuildContext context) => SignUpPage(),
         '/home': (BuildContext context) => HomePage()
       },
     );
