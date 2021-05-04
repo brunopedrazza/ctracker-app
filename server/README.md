@@ -366,6 +366,25 @@ Todas as requisições que falharem irão vir retornadas com uma descrição mai
 
 &emsp;
 
+<<<<<<< Updated upstream
+=======
+### Code snippet
+```python
+now = utc_now()
+x_days_ago = now - timedelta(days=server_settings.DAYS_TO_LIMIT_NOTIFICATION)
+
+users_notification_disabled = User.objects.exclude(notification_enabled=True).all()
+for user in users_notification_disabled:
+    try:
+        SicknessNotification.objects.get(user=user, created_at__gte=x_days_ago)
+    except ObjectDoesNotExist:
+        logger.info(f"Enabling notification from user {user}")
+        user.notification_enabled = True
+        user.save()
+```
+&emsp;
+
+>>>>>>> Stashed changes
 ## Procura por notificações não processadas
 
 &emsp;Assim que uma notificação é criada, ela é vista como não processada para o sistema.
@@ -375,6 +394,57 @@ Todas as requisições que falharem irão vir retornadas com uma descrição mai
 &emsp;Com isso em mãos, podemos avisar de alguma forma para cada usuário que satisfaz essas condições que ela potencialmente teve contato com uma pessoa infectada, e, ainda mais precisamente, em qual local que isso aconteceu.
 
 &emsp;
+<<<<<<< Updated upstream
+=======
+
+### Code snippet
+```python
+unprocessed_notifications: List[SicknessNotification] = (
+            SicknessNotification.objects
+            .select_related("user")
+            .filter(is_processed=False)
+            .order_by("created_at")
+            .all()
+        )
+
+for notification in unprocessed_notifications:
+    logger.debug(f"Processing notification {notification}")
+    x_days_ago = notification.created_at - timedelta(days=server_settings.DAYS_BEFORE_NOTIFICATION)
+    places_user_has_been = UserPlaceRegister.objects.filter(
+        user=notification.user,
+        departure_date__gt=x_days_ago
+    ).all()
+
+    for place_user_has_been in places_user_has_been:
+        before_time_window_qparams = Q(
+            departure_date__lt=place_user_has_been.arrival_date
+        )
+        after_time_window_qparams = Q(
+            arrival_date__gt=place_user_has_been.departure_date
+        )
+        registers_to_notify: List[UserPlaceRegister] = (
+            UserPlaceRegister.objects
+            .filter(place_id=place_user_has_been.place_id)
+            .exclude(
+                before_time_window_qparams |
+                after_time_window_qparams |
+                Q(user=notification.user) |
+                Q(has_to_notify=True)
+            )
+            .all()
+        )
+        for register in registers_to_notify:
+            logger.debug(f"Indicate that {register} needs to be notified")
+            register.number_of_notifications += 1
+            register.has_to_notify = True
+            register.save()
+
+    logger.debug(f"Notification {notification} was processed")
+    notification.is_processed = True
+    notification.save()
+```
+&emsp;
+>>>>>>> Stashed changes
 ## Próximos passos
 
 
