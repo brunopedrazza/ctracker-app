@@ -366,8 +366,6 @@ Todas as requisições que falharem irão vir retornadas com uma descrição mai
 
 &emsp;
 
-<<<<<<< Updated upstream
-=======
 ### Code snippet
 ```python
 now = utc_now()
@@ -384,7 +382,6 @@ for user in users_notification_disabled:
 ```
 &emsp;
 
->>>>>>> Stashed changes
 ## Procura por notificações não processadas
 
 &emsp;Assim que uma notificação é criada, ela é vista como não processada para o sistema.
@@ -394,8 +391,6 @@ for user in users_notification_disabled:
 &emsp;Com isso em mãos, podemos avisar de alguma forma para cada usuário que satisfaz essas condições que ela potencialmente teve contato com uma pessoa infectada, e, ainda mais precisamente, em qual local que isso aconteceu.
 
 &emsp;
-<<<<<<< Updated upstream
-=======
 
 ### Code snippet
 ```python
@@ -444,7 +439,6 @@ for notification in unprocessed_notifications:
     notification.save()
 ```
 &emsp;
->>>>>>> Stashed changes
 ## Próximos passos
 
 
