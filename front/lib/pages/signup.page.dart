@@ -56,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
         lastName: _userLastName,
         email: _userEmail,
         birthday: _userBirthdate,
-        password: sha512.convert(bytes));
+        password: sha512.convert(bytes).toString());
 
     final signUpStatus = await CTrackerAPI().signup(newUser);
     print(newUser.password.toString().length);
@@ -122,7 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         decoration: GlobalStyles.standardTextField(
                             'Type your birthday'),
                         onChanged: ((text) =>
-                            {updateUserData('birthday', text)})),
+                            {updateUserData('birthdate', text)})),
                     SizedBox(
                       height: 20,
                     ),
@@ -135,12 +135,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                        obscureText: true,
-                        decoration: GlobalStyles.standardTextField(
-                            'Re-type your password'),
-                        onChanged: ((text) =>
-                            {updateUserData('username', text)})),
                     SizedBox(
                       height: 20,
                     ),

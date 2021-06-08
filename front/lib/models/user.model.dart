@@ -5,7 +5,7 @@ class User {
   final String firstName;
   final String lastName;
   final String email;
-  final Digest password;
+  final String password;
   final String birthday;
 
   User(
