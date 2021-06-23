@@ -4,6 +4,8 @@ import 'package:crypto/crypto.dart';
 import 'package:front/apis/ctracker.api.dart';
 import 'package:front/global.style.dart';
 import 'package:flutter/material.dart';
+import 'package:front/providers/user.provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -62,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
     return valid;
   }
 
-  login() async {
+  login(BuildContext context) async {
     if (!validInputs()) {
       return;
     }
@@ -73,10 +75,11 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final bytes = utf8.encode(_password);
       final encryptedPassword = sha512.convert(bytes).toString();
-      await CTrackerAPI().login(_email, encryptedPassword);
+      final user = await CTrackerAPI().login(_email, encryptedPassword);
       setState(() {
         _isValidating = false;
       });
+      Provider.of<UserProvider>(context, listen: false).setUser(user);
       Navigator.pushNamed(context, '/home');
     } catch (e) {
       setState(() {
@@ -202,12 +205,12 @@ _userInputs(context, setPassword, setEmail, _invalidInputs) {
   );
 }
 
-_buttons(context, validateInputs) {
+_buttons(context, login) {
   return Wrap(spacing: 10, direction: Axis.vertical, children: [
     Padding(
       padding: const EdgeInsets.only(top: 20),
       child: ElevatedButton(
-        onPressed: () => validateInputs(),
+        onPressed: () => login(context),
         child: Text('Login'),
         style: GlobalStyles.standardButton,
       ),
