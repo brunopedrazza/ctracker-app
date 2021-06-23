@@ -5,6 +5,8 @@ import 'package:front/apis/covid-data.api.dart';
 import 'package:front/models/country-data.model.dart';
 import 'package:front/pages/home/home.style.dart';
 import 'package:front/pages/home/widgets/country-card.widget.dart';
+import 'package:front/providers/user.provider.dart';
+import 'package:provider/provider.dart';
 import '../../global.style.dart';
 
 class HomePage extends StatefulWidget {
@@ -63,12 +65,11 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Welcome, Gui!',
-                      style: GlobalStyles.subtitleTextGradient,
-                    ),
-                  ),
+                      alignment: Alignment.topLeft,
+                      child: Consumer<UserProvider>(
+                          builder: (context, user, child) => Text(
+                              "Welcome, ${user.getUser().firstName}!",
+                              style: GlobalStyles.subtitleTextGradient))),
                 ),
               ),
               Padding(
