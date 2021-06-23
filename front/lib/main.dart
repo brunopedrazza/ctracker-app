@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:front/pages/home/home.page.dart';
 import 'package:front/pages/signup.page.dart';
+import 'package:front/providers/user.provider.dart';
+import 'package:provider/provider.dart';
 import './pages/login.page.dart';
 import './pages/splash.page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   await DotEnv().load('.env');
-  runApp(CTracker());
+  runApp(ChangeNotifierProvider(
+    create: (context) => UserProvider(),
+    child: CTracker(),
+  ));
 }
 
 class CTracker extends StatelessWidget {
