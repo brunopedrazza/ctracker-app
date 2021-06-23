@@ -1,4 +1,3 @@
-import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 
 class User {
@@ -15,9 +14,12 @@ class User {
       @required this.password,
       @required this.birthday});
 
-  // User.fromJson(Map<String, dynamic> json)
-  // : name = json['n'],
-  //   url = json['u'];
+  User.fromJson(Map<String, dynamic> json)
+      : firstName = json['first_name'],
+        lastName = json['last_name'],
+        birthday = json['birthdate'],
+        email = json['email'],
+        password = json['password'];
 
   Map<String, dynamic> toJson() {
     return {

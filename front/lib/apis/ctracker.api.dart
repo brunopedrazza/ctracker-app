@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:front/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,13 +28,14 @@ class CTrackerAPI {
     }
   }
 
-  Future<void> login(String email, String password) async {
+  Future<User> login(String email, String password) async {
     final partialUserData = new User(
         firstName: "",
         lastName: "",
         email: email,
         password: password,
         birthday: "");
+
     try {
       final response = await http.post(
           Uri.http(
@@ -54,7 +53,9 @@ class CTrackerAPI {
         throw new Error();
       }
 
-      return;
+      final userLoggedIn = User.fromJson(json.decode(response.body));
+
+      return userLoggedIn;
     } catch (e) {
       print(e);
       throw new Error();
