@@ -3,10 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:front/apis/covid-data.api.dart';
 import 'package:front/models/country-data.model.dart';
+import 'package:front/models/place.model.dart';
+import 'package:front/models/user.model.dart';
 import 'package:front/pages/home/home.style.dart';
 import 'package:front/pages/home/widgets/country-card.widget.dart';
+import 'package:front/pages/home/widgets/place-card.widget.dart';
 import 'package:front/providers/user.provider.dart';
 import 'package:provider/provider.dart';
+import 'package:front/apis/ctracker.api.dart';
 import '../../global.style.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +22,8 @@ class _HomePageState extends State<HomePage> {
   bool requestError = false;
   bool isFetchingData = true;
   List<CountryData> countries = [];
+  List<Place> _visitedPlaces;
+  User _user;
 
   Future<CountryData> fetchdata() async {
     final response = await CovidDataAPI().fetchDataByCountry('brazil');
@@ -28,16 +34,25 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    CovidDataAPI()
-        .fetchDataMultipleCountries(['brazil', 'italy', 'france'])
-        .then((countryListData) => setState(() {
-              this.isFetchingData = false;
-              this.countries = countryListData;
-            }))
-        .catchError((e) => setState(() {
-              isFetchingData = false;
-              requestError = true;
-            }));
+    // Has access to context after first build (to use context)
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final user = Provider.of<UserProvider>(context, listen: false).getUser();
+      try {
+        final places = await CTrackerAPI().fetchUserPlaces(user);
+
+        setState(() {
+          _visitedPlaces = places;
+          isFetchingData = false;
+          _user = user;
+        });
+      } catch (e) {
+        setState(() {
+          isFetchingData = false;
+          requestError = true;
+          _user = user;
+        });
+      }
+    });
   }
 
   @override
@@ -75,27 +90,31 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                    'Here are some of the latest COVID-19 statistics. Click on the desired country to see more information.',
+                    'Here are some of the latest places you have visited. If you had contact with any infected person., the place will be higlited in red.',
                     style: GlobalStyles.standardSubtextGradient),
               ),
               isFetchingData
                   ? _progressIndicator()
                   : requestError
                       ? _apiErrorMessage()
-                      : Expanded(
-                          child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: GridView.count(
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            crossAxisCount: 2,
-                            children: countries
-                                .map((country) => CountryCard(
-                                      country: country,
-                                    ))
-                                .toList(),
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                    height: 470,
+                                    child: ListView.builder(
+                                        // padding: EdgeInsets.only(bottom: 80),
+                                        itemCount: _visitedPlaces.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return PlaceCard();
+                                        }))
+                              ],
+                            ),
                           ),
-                        )),
+                        ),
               _imInfectedButton()
             ],
           ),
