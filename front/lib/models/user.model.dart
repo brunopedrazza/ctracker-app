@@ -6,19 +6,22 @@ class User {
   final String email;
   final String password;
   final String birthday;
+  final bool notificationEnabled;
 
   User(
       {@required this.firstName,
       @required this.lastName,
       @required this.email,
       @required this.password,
-      @required this.birthday});
+      @required this.birthday,
+      this.notificationEnabled});
 
   User.fromJson(Map<String, dynamic> json)
       : firstName = json['first_name'],
         lastName = json['last_name'],
         birthday = json['birthdate'],
         email = json['email'],
+        notificationEnabled = json['notification_enabled'],
         password = json['password'];
 
   Map<String, dynamic> toJson() {

@@ -23,7 +23,6 @@ class _HomePageState extends State<HomePage> {
   bool isFetchingData = true;
   List<CountryData> countries = [];
   List<Place> _visitedPlaces;
-  User _user;
 
   Future<CountryData> fetchdata() async {
     final response = await CovidDataAPI().fetchDataByCountry('brazil');
@@ -43,16 +42,38 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _visitedPlaces = places;
           isFetchingData = false;
-          _user = user;
         });
       } catch (e) {
         setState(() {
           isFetchingData = false;
           requestError = true;
-          _user = user;
         });
       }
     });
+  }
+
+  renderDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: GlobalStyles.rgbColors['light-gray'],
+            title: Text(
+              "You have recently notified us that you were infected. You must wait at least 30 days until you can notify again.",
+              style: GlobalStyles.standardText,
+            ),
+            actions: [
+              TextButton(
+                  style: GlobalStyles.standardButton,
+                  onPressed: () => {
+                        Navigator.pop(context, 'OK'),
+                      },
+                  child: Text(
+                    "OK",
+                  ))
+            ],
+          );
+        });
   }
 
   @override
@@ -105,7 +126,6 @@ class _HomePageState extends State<HomePage> {
                                 Container(
                                     height: 470,
                                     child: ListView.builder(
-                                        // padding: EdgeInsets.only(bottom: 80),
                                         itemCount: _visitedPlaces.length,
                                         itemBuilder:
                                             (BuildContext context, int index) {
@@ -115,31 +135,37 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-              _imInfectedButton()
+              _imInfectedButton(context)
             ],
           ),
         ),
       ),
     );
   }
+
+  _imInfectedButton(context) {
+    return Consumer<UserProvider>(
+        builder: (context, user, child) => Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: () => {
+                    if (!user.getUser().notificationEnabled)
+                      {renderDialog()}
+                    else
+                      {Navigator.pushNamed(context, '/notify')}
+                  },
+                  child: Text("I'm infected!"),
+                  style: HomePageStyles.infectedButton,
+                ),
+              ),
+            ));
+  }
 }
 
 _apiErrorMessage() {
   return Text('errooo');
-}
-
-_imInfectedButton() {
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Align(
-      alignment: Alignment.bottomCenter,
-      child: ElevatedButton(
-        onPressed: () => {},
-        child: Text("I'm infected!"),
-        style: HomePageStyles.infectedButton,
-      ),
-    ),
-  );
 }
 
 _progressIndicator() {
