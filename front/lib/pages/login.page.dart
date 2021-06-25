@@ -16,10 +16,26 @@ class _LoginPageState extends State<LoginPage> {
   String _email;
   String _password;
   bool _isValidating = false;
+  bool _isAlreadyLoggedIn = false;
   Map<String, Map<String, Object>> _invalidInputs = {
     'email': {'error': false, 'message': ''},
     'password': {'error': false, 'message': ''},
   };
+
+  void initState() {
+    super.initState();
+    if (_isAlreadyLoggedIn) {
+      setState(() {
+        _email =
+            Provider.of<UserProvider>(context, listen: false).getUser().email;
+        _password = "**********";
+      });
+    }
+    setState(() {
+      _isAlreadyLoggedIn =
+          Provider.of<UserProvider>(context, listen: false).isLoggedIn();
+    });
+  }
 
   setEmail(text) {
     setState(() {
@@ -65,6 +81,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login(BuildContext context) async {
+    if (_isAlreadyLoggedIn) {
+      Navigator.pushNamed(context, '/home');
+    }
+
     if (!validInputs()) {
       return;
     }
@@ -154,71 +174,71 @@ class _LoginPageState extends State<LoginPage> {
             ),
     );
   }
-}
 
-_progressIndicator() {
-  return Container(
-    decoration: BoxDecoration(gradient: GlobalStyles.standardGradient),
-    child: Center(
-      child: SizedBox(
-        height: 100,
-        width: 100,
-        child: CircularProgressIndicator(
-          strokeWidth: 5,
-          valueColor: AlwaysStoppedAnimation<Color>(
-              GlobalStyles.rgbColors['dark-gray']),
+  _progressIndicator() {
+    return Container(
+      decoration: BoxDecoration(gradient: GlobalStyles.standardGradient),
+      child: Center(
+        child: SizedBox(
+          height: 100,
+          width: 100,
+          child: CircularProgressIndicator(
+            strokeWidth: 5,
+            valueColor: AlwaysStoppedAnimation<Color>(
+                GlobalStyles.rgbColors['dark-gray']),
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-_userInputs(context, setPassword, setEmail, _invalidInputs) {
-  return Wrap(
-    spacing: 10,
-    direction: Axis.vertical,
-    children: [
-      Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        child: TextField(
-            onChanged: (text) {
-              setEmail(text);
-            },
-            decoration: GlobalStyles.standardTextField(
-                'Email',
-                _invalidInputs['email']['error'],
-                _invalidInputs['email']['message'])),
+  _userInputs(context, setPassword, setEmail, _invalidInputs) {
+    return Wrap(
+      spacing: 10,
+      direction: Axis.vertical,
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TextField(
+              onChanged: (text) {
+                setEmail(text);
+              },
+              decoration: GlobalStyles.standardTextField(
+                  'Email',
+                  _invalidInputs['email']['error'],
+                  _invalidInputs['email']['message'])),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TextField(
+              onChanged: (text) {
+                setPassword(text);
+              },
+              obscureText: true,
+              decoration: GlobalStyles.standardTextField(
+                  'Password',
+                  _invalidInputs['password']['error'],
+                  _invalidInputs['password']['message'])),
+        )
+      ],
+    );
+  }
+
+  _buttons(context, login) {
+    return Wrap(spacing: 10, direction: Axis.vertical, children: [
+      Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: ElevatedButton(
+          onPressed: () => login(context),
+          child: Text('Login'),
+          style: GlobalStyles.standardButton,
+        ),
       ),
-      Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        child: TextField(
-            onChanged: (text) {
-              setPassword(text);
-            },
-            obscureText: true,
-            decoration: GlobalStyles.standardTextField(
-                'Password',
-                _invalidInputs['password']['error'],
-                _invalidInputs['password']['message'])),
-      )
-    ],
-  );
-}
-
-_buttons(context, login) {
-  return Wrap(spacing: 10, direction: Axis.vertical, children: [
-    Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: ElevatedButton(
-        onPressed: () => login(context),
-        child: Text('Login'),
+      ElevatedButton(
+        onPressed: () => Navigator.pop(context),
+        child: Text('Cancel'),
         style: GlobalStyles.standardButton,
-      ),
-    ),
-    ElevatedButton(
-      onPressed: () => Navigator.pop(context),
-      child: Text('Cancel'),
-      style: GlobalStyles.standardButton,
-    )
-  ]);
+      )
+    ]);
+  }
 }
