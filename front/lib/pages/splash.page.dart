@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:front/global.style.dart';
 import 'package:flutter/material.dart';
+import 'package:front/localization/localizations.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _SplashPageState extends State<SplashPage> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 100, horizontal: 42),
                 child: Text(
-                  'Welcome to CTracker App!',
+                  AppLocalizations.of(context).welcome,
                   style: GlobalStyles.titleTextGradient,
                 ),
               ),
@@ -38,7 +39,7 @@ class _SplashPageState extends State<SplashPage> {
                 duration: Duration(milliseconds: 500),
                 child: ElevatedButton(
                   onPressed: () => Navigator.pushNamed(context, '/login'),
-                  child: Text('Login'),
+                  child: Text(AppLocalizations.of(context).login),
                   style: GlobalStyles.standardButton,
                 ),
               ),
@@ -46,7 +47,7 @@ class _SplashPageState extends State<SplashPage> {
                 padding: const EdgeInsets.only(top: 10),
                 child: ElevatedButton(
                   onPressed: () => Navigator.pushNamed(context, '/signup'),
-                  child: Text('Sign Up'),
+                  child: Text(AppLocalizations.of(context).signUp),
                   style: GlobalStyles.standardButton,
                 ),
               )

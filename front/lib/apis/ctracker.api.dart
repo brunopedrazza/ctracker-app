@@ -4,11 +4,13 @@ import 'package:front/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
 class CTrackerAPI {
+  static const url = 'c0428b72f76c.ngrok.io';
+
   Future<void> signup(User newUser) async {
     try {
       final response2 = await http.post(
           Uri.http(
-            '10.0.2.2:8000',
+            url,
             '/api/user/register',
           ),
           headers: <String, String>{
@@ -40,7 +42,7 @@ class CTrackerAPI {
     try {
       final response = await http.post(
           Uri.http(
-            '10.0.2.2:8000',
+            url,
             '/api/user/login',
           ),
           headers: <String, String>{
@@ -67,7 +69,7 @@ class CTrackerAPI {
     try {
       final response = await http.get(
           Uri.http(
-            '10.0.2.2:8000',
+            url,
             '/api/place/user/${user.email}',
           ),
           headers: <String, String>{

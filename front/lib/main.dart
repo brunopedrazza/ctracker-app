@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/localization/localizations.dart';
 import 'package:front/pages/home/home.page.dart';
 import 'package:front/pages/signup.page.dart';
 import 'package:front/providers/user.provider.dart';
@@ -6,6 +7,7 @@ import 'package:provider/provider.dart';
 import './pages/login.page.dart';
 import './pages/splash.page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   await DotEnv().load('.env');
@@ -19,7 +21,18 @@ class CTracker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'CTracker',
+      localizationsDelegates: [
+        const AppLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('en', ''),
+        const Locale('es', ''),
+        const Locale('pt', 'BR'),
+      ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

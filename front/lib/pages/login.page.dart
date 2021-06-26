@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:front/apis/ctracker.api.dart';
 import 'package:front/global.style.dart';
 import 'package:flutter/material.dart';
+import 'package:front/localization/localizations.dart';
 import 'package:front/providers/user.provider.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +55,8 @@ class _LoginPageState extends State<LoginPage> {
     bool valid = true;
     if (_email == null) {
       updatedInputStatus['email']['error'] = true;
-      updatedInputStatus['email']['message'] = 'Please check your email.';
+      updatedInputStatus['email']['message'] =
+          AppLocalizations.of(context).emailInputValidation;
 
       valid = false;
     } else {
@@ -64,7 +66,8 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_password == null) {
       updatedInputStatus['password']['error'] = true;
-      updatedInputStatus['password']['message'] = 'Please check your password.';
+      updatedInputStatus['password']['message'] =
+          AppLocalizations.of(context).passwordInputValidation;
 
       valid = false;
     } else {
@@ -116,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
           return AlertDialog(
             backgroundColor: GlobalStyles.rgbColors['light-gray'],
             title: Text(
-              "Invalid email or password. Please try again.",
+              AppLocalizations.of(context).invalidEmailPassword,
               style: GlobalStyles.standardText,
             ),
             actions: [
@@ -141,7 +144,7 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded),
-          tooltip: 'Go Back',
+          tooltip: AppLocalizations.of(context).goBack,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -160,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 50),
                         child: Text(
-                          'Login',
+                          AppLocalizations.of(context).login,
                           style: GlobalStyles.titleTextGradient,
                         ),
                       ),
@@ -204,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                 setEmail(text);
               },
               decoration: GlobalStyles.standardTextField(
-                  'Email',
+                  AppLocalizations.of(context).email,
                   _invalidInputs['email']['error'],
                   _invalidInputs['email']['message'])),
         ),
@@ -216,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               obscureText: true,
               decoration: GlobalStyles.standardTextField(
-                  'Password',
+                  AppLocalizations.of(context).password,
                   _invalidInputs['password']['error'],
                   _invalidInputs['password']['message'])),
         )
@@ -230,13 +233,13 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.only(top: 20),
         child: ElevatedButton(
           onPressed: () => login(context),
-          child: Text('Login'),
+          child: Text(AppLocalizations.of(context).login),
           style: GlobalStyles.standardButton,
         ),
       ),
       ElevatedButton(
         onPressed: () => Navigator.pop(context),
-        child: Text('Cancel'),
+        child: Text(AppLocalizations.of(context).cancel),
         style: GlobalStyles.standardButton,
       )
     ]);
