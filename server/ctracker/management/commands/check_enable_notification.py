@@ -6,7 +6,10 @@ from logging import getLogger
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import BaseCommand
-from django.db.utils import InterfaceError
+from django.db.utils import InterfaceError as InterfaceErrorDjango
+from psycopg2 import InterfaceError
+
+from django import db
 
 from django.conf import settings as server_settings
 
@@ -64,11 +67,17 @@ class Command(BaseCommand):
                     break
                 try:
                     self.check_enable_notification()
-                except InterfaceError as ie:
-                    logger.exception("check_enable_notification() error when connecting to database")
+                except (InterfaceError, InterfaceErrorDjango) as ie:
+                    logger.error(
+                        f"check_enable_notification error when connecting to database: {ie}"
+                    )
+                    logger.info("Closing existing connection...")
+                    db.connection.close()
                     pass
                 except Exception as e:
-                    logger.exception("check_enable_notification() from connector threw an unexpected exception")
+                    logger.error(
+                        f"check_enable_notification from connector threw an unexpected exception: {e}"
+                    )
                     pass
                 self.sleep(options.get("interval") or DEFAULT_INTERVAL)
         else:
