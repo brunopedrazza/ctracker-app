@@ -1,5 +1,6 @@
 import 'package:front/global.style.dart';
 import 'package:flutter/material.dart';
+import 'package:front/localization/localizations.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded),
-          tooltip: 'Go Back',
+          tooltip: AppLocalizations.of(context).goBack,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -69,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 50),
                         child: Text(
-                          'Login',
+                          AppLocalizations.of(context).login,
                           style: GlobalStyles.titleTextGradient,
                         ),
                       ),
@@ -116,7 +117,7 @@ _userInputs(
             onChanged: (text) {
               setPassword(text);
             },
-            decoration: GlobalStyles.standardTextField('Email')),
+            decoration: GlobalStyles.standardTextField(AppLocalizations.of(context).email)),
       ),
       Container(
         width: MediaQuery.of(context).size.width * 0.8,
@@ -125,7 +126,7 @@ _userInputs(
               setEmail(text);
             },
             obscureText: true,
-            decoration: GlobalStyles.standardTextField('Password')),
+            decoration: GlobalStyles.standardTextField(AppLocalizations.of(context).password)),
       )
     ],
   );
@@ -137,13 +138,13 @@ _buttons(context, validateInputs) {
       padding: const EdgeInsets.only(top: 20),
       child: ElevatedButton(
         onPressed: () => validateInputs(),
-        child: Text('Login'),
+        child: Text(AppLocalizations.of(context).login),
         style: GlobalStyles.standardButton,
       ),
     ),
     ElevatedButton(
       onPressed: () => Navigator.pop(context),
-      child: Text('Cancel'),
+      child: Text(AppLocalizations.of(context).cancel),
       style: GlobalStyles.standardButton,
     )
   ]);

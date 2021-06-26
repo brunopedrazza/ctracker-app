@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/localization/localizations.dart';
 
 import '../global.style.dart';
 
@@ -12,11 +13,11 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Sign Up'),
+          title: Text(AppLocalizations.of(context).signUp),
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_rounded),
-            tooltip: 'Go Back',
+            tooltip: AppLocalizations.of(context).goBack,
             onPressed: () {
               Navigator.pop(context);
             },
@@ -35,34 +36,34 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10.0, vertical: 20),
                       child: Text(
-                        'Sign Up to our Platform!',
+                        AppLocalizations.of(context).signUpMessage,
                         style: GlobalStyles.titleTextGradient,
                       ),
                     ),
                     TextFormField(
                       decoration:
-                          GlobalStyles.standardTextField('Type your name'),
+                          GlobalStyles.standardTextField(AppLocalizations.of(context).nameInput),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     TextFormField(
                       decoration:
-                          GlobalStyles.standardTextField('Type your surname'),
+                          GlobalStyles.standardTextField(AppLocalizations.of(context).surnameInput),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     TextFormField(
                       decoration:
-                          GlobalStyles.standardTextField('Type your email'),
+                          GlobalStyles.standardTextField(AppLocalizations.of(context).emailInput),
                     ),
                     SizedBox(
                       height: 20,
                     ),
                     TextFormField(
                       decoration:
-                          GlobalStyles.standardTextField('Type your birthday'),
+                          GlobalStyles.standardTextField(AppLocalizations.of(context).birthdayInput),
                     ),
                     SizedBox(
                       height: 20,
@@ -70,7 +71,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     TextFormField(
                       obscureText: true,
                       decoration:
-                          GlobalStyles.standardTextField('Type your password'),
+                          GlobalStyles.standardTextField(AppLocalizations.of(context).passwordInput),
                     ),
                     SizedBox(
                       height: 20,
@@ -78,7 +79,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     TextFormField(
                       obscureText: true,
                       decoration: GlobalStyles.standardTextField(
-                          'Re-type your password'),
+                          AppLocalizations.of(context).reTypePassword),
                     ),
                     SizedBox(
                       height: 20,
@@ -89,11 +90,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         ElevatedButton(
                             style: GlobalStyles.standardButton,
                             onPressed: () => {},
-                            child: Text('Sign Up')),
+                            child: Text(AppLocalizations.of(context).signUp)),
                         ElevatedButton(
                             style: GlobalStyles.standardButton,
                             onPressed: () => Navigator.pushNamed(context, '/'),
-                            child: Text('Cancel')),
+                            child: Text(AppLocalizations.of(context).cancel)),
                       ],
                     )
                   ],

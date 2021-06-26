@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:front/apis/covid-data.api.dart';
+import 'package:front/localization/localizations.dart';
 import 'package:front/models/country-data.model.dart';
 import 'package:front/pages/home/home.style.dart';
 import 'package:front/pages/home/widgets/country-card.widget.dart';
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded),
-          tooltip: 'Go Back',
+          tooltip: AppLocalizations.of(context).goBack,
           onPressed: () {
             Navigator.pop(context);
           },
@@ -95,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                                 .toList(),
                           ),
                         )),
-              _imInfectedButton()
+              _imInfectedButton(context)
             ],
           ),
         ),
@@ -108,14 +109,14 @@ _apiErrorMessage() {
   return Text('errooo');
 }
 
-_imInfectedButton() {
+_imInfectedButton(BuildContext context) {
   return Padding(
     padding: const EdgeInsets.all(16.0),
     child: Align(
       alignment: Alignment.bottomCenter,
       child: ElevatedButton(
         onPressed: () => {},
-        child: Text("I'm infected!"),
+        child: Text(AppLocalizations.of(context).imInfected),
         style: HomePageStyles.infectedButton,
       ),
     ),
