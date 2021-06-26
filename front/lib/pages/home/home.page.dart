@@ -3,8 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:front/apis/covid-data.api.dart';
 import 'package:front/models/country-data.model.dart';
+import 'package:front/models/place.model.dart';
+import 'package:front/models/user.model.dart';
 import 'package:front/pages/home/home.style.dart';
 import 'package:front/pages/home/widgets/country-card.widget.dart';
+import 'package:front/pages/home/widgets/place-card.widget.dart';
+import 'package:front/providers/user.provider.dart';
+import 'package:provider/provider.dart';
+import 'package:front/apis/ctracker.api.dart';
 import '../../global.style.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   bool requestError = false;
   bool isFetchingData = true;
   List<CountryData> countries = [];
+  List<Place> _visitedPlaces;
 
   Future<CountryData> fetchdata() async {
     final response = await CovidDataAPI().fetchDataByCountry('brazil');
@@ -26,16 +33,47 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    CovidDataAPI()
-        .fetchDataMultipleCountries(['brazil', 'italy', 'france'])
-        .then((countryListData) => setState(() {
-              this.isFetchingData = false;
-              this.countries = countryListData;
-            }))
-        .catchError((e) => setState(() {
-              isFetchingData = false;
-              requestError = true;
-            }));
+    // Has access to context after first build (to use context)
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final user = Provider.of<UserProvider>(context, listen: false).getUser();
+      try {
+        final places = await CTrackerAPI().fetchUserPlaces(user);
+
+        setState(() {
+          _visitedPlaces = places;
+          isFetchingData = false;
+        });
+      } catch (e) {
+        setState(() {
+          isFetchingData = false;
+          requestError = true;
+        });
+      }
+    });
+  }
+
+  renderDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: GlobalStyles.rgbColors['light-gray'],
+            title: Text(
+              "You have recently notified us that you were infected. You must wait at least 30 days until you can notify again.",
+              style: GlobalStyles.standardText,
+            ),
+            actions: [
+              TextButton(
+                  style: GlobalStyles.standardButton,
+                  onPressed: () => {
+                        Navigator.pop(context, 'OK'),
+                      },
+                  child: Text(
+                    "OK",
+                  ))
+            ],
+          );
+        });
   }
 
   @override
@@ -63,63 +101,71 @@ class _HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Welcome, Gui!',
-                      style: GlobalStyles.subtitleTextGradient,
-                    ),
-                  ),
+                      alignment: Alignment.topLeft,
+                      child: Consumer<UserProvider>(
+                          builder: (context, user, child) => Text(
+                              "Welcome, ${user.getUser().firstName}!",
+                              style: GlobalStyles.subtitleTextGradient))),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                    'Here are some of the latest COVID-19 statistics. Click on the desired country to see more information.',
+                    'Here are some of the latest places you have visited. If you had contact with any infected person., the place will be higlited in red.',
                     style: GlobalStyles.standardSubtextGradient),
               ),
               isFetchingData
                   ? _progressIndicator()
                   : requestError
                       ? _apiErrorMessage()
-                      : Expanded(
-                          child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: GridView.count(
-                            crossAxisSpacing: 20,
-                            mainAxisSpacing: 20,
-                            crossAxisCount: 2,
-                            children: countries
-                                .map((country) => CountryCard(
-                                      country: country,
-                                    ))
-                                .toList(),
+                      : Padding(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                    height: 470,
+                                    child: ListView.builder(
+                                        itemCount: _visitedPlaces.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return PlaceCard();
+                                        }))
+                              ],
+                            ),
                           ),
-                        )),
-              _imInfectedButton()
+                        ),
+              _imInfectedButton(context)
             ],
           ),
         ),
       ),
     );
   }
+
+  _imInfectedButton(context) {
+    return Consumer<UserProvider>(
+        builder: (context, user, child) => Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: () => {
+                    if (!user.getUser().notificationEnabled)
+                      {renderDialog()}
+                    else
+                      {Navigator.pushNamed(context, '/notify')}
+                  },
+                  child: Text("I'm infected!"),
+                  style: HomePageStyles.infectedButton,
+                ),
+              ),
+            ));
+  }
 }
 
 _apiErrorMessage() {
   return Text('errooo');
-}
-
-_imInfectedButton() {
-  return Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Align(
-      alignment: Alignment.bottomCenter,
-      child: ElevatedButton(
-        onPressed: () => {},
-        child: Text("I'm infected!"),
-        style: HomePageStyles.infectedButton,
-      ),
-    ),
-  );
 }
 
 _progressIndicator() {

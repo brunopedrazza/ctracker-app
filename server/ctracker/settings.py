@@ -32,7 +32,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = env.bool("DJANGO_DEBUG", default=False)
 
 ALLOWED_HOSTS = env.list(
-    "DJANGO_ALLOWED_HOSTS", default=["localhost", "127.0.0.1", "[::1]", "0.0.0.0"]
+    "DJANGO_ALLOWED_HOSTS", default=[ '10.0.2.2', "localhost", "127.0.0.1", "[::1]", "0.0.0.0",]
 )
 
 SERVER_API_KEY = env("SERVER_API_KEY")
