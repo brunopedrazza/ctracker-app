@@ -64,13 +64,25 @@ class GlobalStyles {
     0.695
   ], transform: GradientRotation(2.13959913 * pi));
 
-  static standardTextField(helperText) {
-    return InputDecoration(
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-                color: GlobalStyles.rgbColors['dark-gray'], width: 2)),
-        border: OutlineInputBorder(),
-        hintText: helperText);
+  static standardTextField(helperText, error, errorText) {
+    return error
+        ? InputDecoration(
+            errorText: errorText,
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                    color: GlobalStyles.rgbColors['dark-gray'], width: 2)),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                    color: GlobalStyles.rgbColors['ivory'], width: 2)),
+            hintText: helperText)
+        : InputDecoration(
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                    color: GlobalStyles.rgbColors['dark-gray'], width: 2)),
+            border: OutlineInputBorder(),
+            hintText: helperText);
   }
 }

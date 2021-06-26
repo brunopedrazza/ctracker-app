@@ -1,8 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.front">
+    <uses-permission android:name="android.permission.INTERNET" /> 
    <application
+   android:usesCleartextTraffic="true"
         android:label="front"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyBodQ0h0rcBh1l8bE3VAhwHCs1e31lPwKU"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
