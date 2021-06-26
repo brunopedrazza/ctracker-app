@@ -14,62 +14,99 @@ class AppLocalizations {
   static Map<String, Map<String, String>> _localizedValues = {
     'en': {
       'welcome': 'Welcome to CTracker App!',
+      'welcomeName': 'Welcome, ',
       'imInfected': 'I\'m infected!',
       'covidDataMessage': 'Here are some of the latest COVID-19 statistics. Click on the desired country to see more information.',
+      'disabledNotifyMessage': 'You have recently notified us that you were infected. You must wait at least 30 days until you can notify again.',
+      'latestPlacesMessage': 'Here are some of the latest places you have visited. If you had contact with any infected person, the place will be highlighted in red.',
+      'registered': 'Successfully registered!',
+      'error': 'An error has occurred. Please try again.',
       'email': 'Email',
       'password': 'Password',
+      'invalidEmailPassword': '',
       'login': 'Login',
       'signUp': 'Sign Up',
       'signUpMessage': 'Sign Up to our Platform!',
       'goBack': 'Go Back',
       'cancel': 'Cancel',
       'nameInput': 'Type your name',
+      'nameInputValidation': 'Please check your first name.',
       'surnameInput': 'Type your surname',
+      'surnameInputValidation': 'Please check your last name.',
       'emailInput': 'Type your email',
-      'birthdayInput': 'Type your birthday',
+      'emailInputValidation': 'Please check your email.',
+      'birthdateInput': 'Type your birthday',
+      'birthdateInputValidation': 'Please check your birthdate.',
       'passwordInput': 'Type your password',
+      'passwordInputValidation': 'Please check your password.',
       'reTypePassword': 'Re-type your password'
     },
     'es': {
       'welcome': 'Bienvenido a CTracker!',
+      'welcomeName': 'Bienvenido, ',
       'imInfected': 'Estoy infectado!',
       'covidDataMessage': 'Estas son algunas de las últimas estadísticas de COVID-19. Haga clic en el país deseado para ver más información.',
+      'disabledNotifyMessage': 'Recientemente nos notificó que estaba infectado. Debe esperar al menos 30 días hasta que pueda notificar nuevamente.',
+      'latestPlacesMessage': 'Estos son algunos de los últimos lugares que ha visitado. Si tuvo contacto con alguna persona infectada, el lugar se resaltará en rojo.',
+      'registered': 'Registrado exitosamente!',
+      'error': 'Se ha producido un error. Inténtalo de nuevo.',
       'email': 'Correo electrónico',
       'password': 'Contraseña',
+      'invalidEmailPassword': 'Correo electrónico o contraseña no válidos. Inténtalo de nuevo.',
       'login': 'Entrar',
       'signUp': 'Inscribirse',
       'signUpMessage': '¡Regístrese en nuestra plataforma!',
       'goBack': 'Regresa',
       'cancel': 'Cancelar',
-      'nameInput': 'Digite seu nome',
-      'surnameInput': 'Digite seu sobrenome',
-      'emailInput': 'Digite seu email',
-      'birthdayInput': 'Digite sua data de nascimento',
-      'passwordInput': 'Digite sua senha',
-      'reTypePassword': 'Digite novamente sua senha'
+      'nameInput': 'Escriba su nombre',
+      'nameInputValidation': 'Comprueba tu nombre.',
+      'surnameInput': 'Escriba su apellido',
+      'surnameInputValidation': 'Comprueba tu apellido.',
+      'emailInput': 'Escriba su correo electrónico',
+      'emailInputValidation': 'Por favor revise su correo electrónico.',
+      'birthdateInput': 'Escriba su fecha de nacimiento',
+      'birthdateInputValidation': 'Comprueba tu fecha de nacimiento.',
+      'passwordInput': 'Escribe tu contraseña',
+      'passwordInputValidation': 'Por favor revise su contraseña.',
+      'reTypePassword': 'Reescribe tu contraseña'
     },
     'pt': {
       'welcome': 'Bem-vindo ao CTracker!',
+      'welcomeName': 'Bem-vindo, ',
       'imInfected': 'Estou infectado!',
       'covidDataMessage': 'Aqui estão algumas das estatísticas mais recentes do COVID-19. Clique no país desejado para ver mais informações.',
+      'disabledNotifyMessage': 'Você nos notificou recentemente que estava infectado. Por favor, espere pelo menos 30 dias para poder notificar novamente.',
+      'latestPlacesMessage': 'Aqui estão alguns dos lugares mais recentes que você visitou. Se você teve contato com alguma pessoa infectada, o local ficará destacado em vermelho.',
+      'registered': 'Registrado com sucesso!',
+      'error': 'Acorreu um erro. Por favor, tente novamente.',
       'email': 'Email',
       'password': 'Senha',
+      'invalidEmailPassword': 'E-mail ou senha incorretos. Por favor, tente novamente.',
       'login': 'Entrar',
       'signUp': 'Inscrever-se',
       'signUpMessage': 'Cadastre-se em nossa plataforma!',
       'goBack': 'Voltar',
       'cancel': 'Cancelar',
-      'nameInput': 'Escriba su nombre',
-      'surnameInput': 'Escriba su apellido',
-      'emailInput': 'Escriba su correo electrónico',
-      'birthdayInput': 'Escriba su fecha de nacimiento',
-      'passwordInput': 'Escribe tu contraseña',
-      'reTypePassword': 'Reescribe tu contraseña'
+      'nameInput': 'Digite seu nome',
+      'nameInputValidation': 'Por favor, verifique seu nome.',
+      'surnameInput': 'Digite seu sobrenome',
+      'surnameInputValidation': 'Por favor, verifique seu sobrenome.',
+      'emailInput': 'Digite seu email',
+      'emailInputValidation': 'Por favor verifique seu email.',
+      'birthdateInput': 'Digite sua data de nascimento',
+      'birthdateInputValidation': 'Verifique sua data de nascimento.',
+      'passwordInput': 'Digite sua senha',
+      'passwordInputValidation': 'Por favor, verifique sua senha.',
+      'reTypePassword': 'Digite novamente sua senha'
     },
   };
 
   String get welcome {
     return _localizedValues[locale.languageCode]['welcome'];
+  }
+
+  String get welcomeName {
+    return _localizedValues[locale.languageCode]['welcomeName'];
   }
 
   String get imInfected {
@@ -80,12 +117,32 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]['covidDataMessage'];
   }
 
+  String get disabledNotifyMessage {
+    return _localizedValues[locale.languageCode]['disabledNotifyMessage'];
+  }
+
+  String get latestPlacesMessage {
+    return _localizedValues[locale.languageCode]['latestPlacesMessage'];
+  }
+
+  String get registered {
+    return _localizedValues[locale.languageCode]['registered'];
+  }
+
+  String get error {
+    return _localizedValues[locale.languageCode]['error'];
+  }
+
   String get email {
     return _localizedValues[locale.languageCode]['email'];
   }
 
   String get password {
     return _localizedValues[locale.languageCode]['password'];
+  }
+
+  String get invalidEmailPassword {
+    return _localizedValues[locale.languageCode]['invalidEmailPassword'];
   }
 
   String get login {
@@ -112,20 +169,40 @@ class AppLocalizations {
     return _localizedValues[locale.languageCode]['nameInput'];
   }
 
+  String get nameInputValidation {
+    return _localizedValues[locale.languageCode]['nameInputValidation'];
+  }
+
   String get surnameInput {
     return _localizedValues[locale.languageCode]['surnameInput'];
+  }
+
+  String get surnameInputValidation {
+    return _localizedValues[locale.languageCode]['surnameInputValidation'];
   }
 
   String get emailInput {
     return _localizedValues[locale.languageCode]['emailInput'];
   }
 
-  String get birthdayInput {
-    return _localizedValues[locale.languageCode]['birthdayInput'];
+  String get emailInputValidation {
+    return _localizedValues[locale.languageCode]['emailInputValidation'];
+  }
+
+  String get birthdateInput {
+    return _localizedValues[locale.languageCode]['birthdateInput'];
+  }
+
+  String get birthdateInputValidation {
+    return _localizedValues[locale.languageCode]['birthdateInputValidation'];
   }
 
   String get passwordInput {
     return _localizedValues[locale.languageCode]['passwordInput'];
+  }
+
+  String get passwordInputValidation {
+    return _localizedValues[locale.languageCode]['passwordInputValidation'];
   }
 
   String get reTypePassword {
