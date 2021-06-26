@@ -6,9 +6,12 @@ from logging import getLogger
 from typing import List
 
 from django.core.management import BaseCommand
-from django.db.utils import InterfaceError
+from django.db.utils import InterfaceError as InterfaceErrorDjango
+from psycopg2 import InterfaceError
 
-from ctracker.models import SicknessNotification, UserPlaceRegister
+from django import db
+
+from ctracker.models import UserPlaceRegister
 
 TERMINATE = False
 DEFAULT_INTERVAL = 60
@@ -58,11 +61,17 @@ class Command(BaseCommand):
                     break
                 try:
                     self.poll_unnotified_registers()
-                except InterfaceError as ie:
-                    logger.exception("poll_unnotified_registers() error when connecting to database")
+                except (InterfaceError, InterfaceErrorDjango) as ie:
+                    logger.error(
+                        f"poll_unnotified_registers error when connecting to database: {ie}"
+                    )
+                    logger.info("Closing existing connection...")
+                    db.connection.close()
                     pass
                 except Exception as e:
-                    logger.exception("poll_unnotified_registers() from connector threw an unexpected exception")
+                    logger.error(
+                        f"poll_unnotified_registers from connector threw an unexpected exception: {e}"
+                    )
                     pass
                 self.sleep(options.get("interval") or DEFAULT_INTERVAL)
         else:

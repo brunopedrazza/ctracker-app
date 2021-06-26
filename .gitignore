@@ -130,3 +130,7 @@ dmypy.json
 
 #Vs code
 .vscode
+
+**/.idea/workspace.xml 
+**/.idea/tasks.xml
+**/*.DS_Store

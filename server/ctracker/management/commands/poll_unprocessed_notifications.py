@@ -1,14 +1,17 @@
 import sys
 import signal
 import time
-from datetime import datetime, timedelta
+from datetime import timedelta
 from logging import getLogger
 
 from typing import List
 
 from django.core.management import BaseCommand
-from django.db.utils import InterfaceError
+from django.db.utils import InterfaceError as InterfaceErrorDjango
+from psycopg2 import InterfaceError
 from django.db.models import Q
+
+from django import db
 
 from django.conf import settings as server_settings
 
@@ -62,11 +65,17 @@ class Command(BaseCommand):
                     break
                 try:
                     self.poll_unprocessed_notifications()
-                except InterfaceError as ie:
-                    logger.exception("poll_unprocessed_notifications() error when connecting to database")
+                except (InterfaceError, InterfaceErrorDjango) as ie:
+                    logger.error(
+                        f"poll_unprocessed_notifications error when connecting to database: {ie}"
+                    )
+                    logger.info("Closing existing connection...")
+                    db.connection.close()
                     pass
                 except Exception as e:
-                    logger.exception("poll_unprocessed_notifications() from connector threw an unexpected exception")
+                    logger.error(
+                        f"poll_unprocessed_notifications from connector threw an unexpected exception: {e}"
+                    )
                     pass
                 self.sleep(options.get("interval") or DEFAULT_INTERVAL)
         else:
