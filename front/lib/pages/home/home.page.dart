@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
           return AlertDialog(
             backgroundColor: GlobalStyles.rgbColors['light-gray'],
             title: Text(
-              "You have recently notified us that you were infected. You must wait at least 30 days until you can notify again.",
+              AppLocalizations.of(context).disabledNotifyMessage,
               style: GlobalStyles.standardText,
             ),
             actions: [
@@ -105,20 +105,20 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment.topLeft,
                       child: Consumer<UserProvider>(
                           builder: (context, user, child) => Text(
-                              "Welcome, ${user.getUser().firstName}!",
+                              AppLocalizations.of(context).welcomeName + "${user.getUser().firstName}!",
                               style: GlobalStyles.subtitleTextGradient))),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                    'Here are some of the latest places you have visited. If you had contact with any infected person., the place will be higlited in red.',
+                    AppLocalizations.of(context).latestPlacesMessage,
                     style: GlobalStyles.standardSubtextGradient),
               ),
               isFetchingData
                   ? _progressIndicator()
                   : requestError
-                      ? _apiErrorMessage()
+                      ? _apiErrorMessage(context)
                       : Padding(
                           padding: const EdgeInsets.only(top: 15),
                           child: Container(
@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                     else
                       {Navigator.pushNamed(context, '/notify')}
                   },
-                  child: Text("I'm infected!"),
+                  child: Text(AppLocalizations.of(context).imInfected),
                   style: HomePageStyles.infectedButton,
                 ),
               ),
@@ -165,8 +165,8 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-_apiErrorMessage() {
-  return Text('errooo');
+_apiErrorMessage(BuildContext context) {
+  return Text(AppLocalizations.of(context).error);
 }
 
 _progressIndicator() {

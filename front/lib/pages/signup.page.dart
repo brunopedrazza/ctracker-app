@@ -79,13 +79,13 @@ class _SignUpPageState extends State<SignUpPage> {
       await CTrackerAPI().signup(newUser);
       setState(() {
         _signingUp = false;
-        _dialogMessage = "Successfully registered!";
+        _dialogMessage = AppLocalizations.of(context).registered;
       });
       renderDialog();
     } catch (e) {
       setState(() {
         _signingUp = false;
-        _dialogMessage = "An error has occurred. Please try again.";
+        _dialogMessage = AppLocalizations.of(context).error;
       });
       renderDialog();
     }
@@ -97,7 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
     if (_userBirthdate == null) {
       updatedInputStatus['birthdate']['error'] = true;
       updatedInputStatus['birthdate']['message'] =
-          'Please check your birthdate.';
+          AppLocalizations.of(context).birthdateInputValidation;
 
       valid = false;
     } else {
@@ -107,7 +107,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
     if (_userEmail == null) {
       updatedInputStatus['email']['error'] = true;
-      updatedInputStatus['email']['message'] = 'Please check your email.';
+      updatedInputStatus['email']['message'] =
+          AppLocalizations.of(context).emailInputValidation;
 
       valid = false;
     } else {
@@ -117,7 +118,7 @@ class _SignUpPageState extends State<SignUpPage> {
     if (_userFirstName == null) {
       updatedInputStatus['firstName']['error'] = true;
       updatedInputStatus['firstName']['message'] =
-          'Please check your first name.';
+          AppLocalizations.of(context).nameInputValidation;
 
       valid = false;
     } else {
@@ -127,7 +128,7 @@ class _SignUpPageState extends State<SignUpPage> {
     if (_userLastName == null) {
       updatedInputStatus['lastName']['error'] = true;
       updatedInputStatus['lastName']['message'] =
-          'Please check your last name.';
+          AppLocalizations.of(context).surnameInputValidation;
       valid = false;
     } else {
       updatedInputStatus['lastName']['error'] = false;
@@ -135,7 +136,8 @@ class _SignUpPageState extends State<SignUpPage> {
     }
     if (_userPassword == null) {
       updatedInputStatus['password']['error'] = true;
-      updatedInputStatus['password']['message'] = 'Please check your password.';
+      updatedInputStatus['password']['message'] =
+          AppLocalizations.of(context).passwordInputValidation;
       valid = false;
     } else {
       updatedInputStatus['password']['error'] = false;
@@ -205,13 +207,13 @@ class _SignUpPageState extends State<SignUpPage> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10.0, vertical: 20),
                             child: Text(
-                              'Sign Up to our Platform!',
+                              AppLocalizations.of(context).signUpMessage,
                               style: GlobalStyles.titleTextGradient,
                             ),
                           ),
                           TextFormField(
                             decoration: GlobalStyles.standardTextField(
-                                'Type your first name',
+                                AppLocalizations.of(context).nameInput,
                                 _invalidInputs['firstName']['error'],
                                 _invalidInputs['firstName']['message']),
                             onChanged: ((text) =>
@@ -222,7 +224,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           TextFormField(
                             decoration: GlobalStyles.standardTextField(
-                                'Type your last name',
+                                AppLocalizations.of(context).surnameInput,
                                 _invalidInputs['lastName']['error'],
                                 _invalidInputs['lastName']['message']),
                             onChanged: ((text) =>
@@ -233,7 +235,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           TextFormField(
                               decoration: GlobalStyles.standardTextField(
-                                  'Type your email',
+                                  AppLocalizations.of(context).emailInput,
                                   _invalidInputs['email']['error'],
                                   _invalidInputs['email']['message']),
                               onChanged: ((text) =>
@@ -243,7 +245,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           TextFormField(
                               decoration: GlobalStyles.standardTextField(
-                                  'Type your birthday',
+                                  AppLocalizations.of(context).birthdateInput,
                                   _invalidInputs['birthdate']['error'],
                                   _invalidInputs['birthdate']['message']),
                               onChanged: ((text) =>
@@ -254,7 +256,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           TextFormField(
                               obscureText: true,
                               decoration: GlobalStyles.standardTextField(
-                                  'Type your password',
+                                  AppLocalizations.of(context).passwordInput,
                                   _invalidInputs['password']['error'],
                                   _invalidInputs['password']['message']),
                               onChanged: ((text) =>
@@ -271,12 +273,12 @@ class _SignUpPageState extends State<SignUpPage> {
                               ElevatedButton(
                                   style: GlobalStyles.standardButton,
                                   onPressed: () async => {signUpUser()},
-                                  child: Text('Sign Up')),
+                                  child: Text(AppLocalizations.of(context).signUp)),
                               ElevatedButton(
                                   style: GlobalStyles.standardButton,
                                   onPressed: () =>
                                       Navigator.pushNamed(context, '/'),
-                                  child: Text('Cancel')),
+                                  child: Text(AppLocalizations.of(context).cancel)),
                             ],
                           )
                         ],
