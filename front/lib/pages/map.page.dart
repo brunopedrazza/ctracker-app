@@ -13,6 +13,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  String _nextPageToken = "";
   GoogleMapController _mapController;
   LocationData _currentLocation;
   bool _isLoadingCurrentPosition = false;
@@ -73,7 +74,17 @@ class _MapPageState extends State<MapPage> {
       final location = GWS.Location(
           lat: _currentLocation.latitude, lng: _currentLocation.longitude);
 
-      final result = await placesAPI.searchNearbyWithRadius(location, 500);
+      var result;
+      if (_nextPageToken == "") {
+        result = await placesAPI.searchNearbyWithRadius(location, 500);
+      } else {
+        result = await placesAPI.searchNearbyWithRadius(location, 500,
+            pagetoken: _nextPageToken);
+      }
+
+      setState(() {
+        _nextPageToken = result.nextPageToken;
+      });
       Provider.of<UserProvider>(context, listen: false)
           .setNearbyPlaces(result.results);
       Navigator.pushNamed(context, '/register-place');

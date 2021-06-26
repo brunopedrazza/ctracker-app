@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:front/apis/ctracker.api.dart';
 import 'package:front/global.style.dart';
 import 'package:front/localization/localizations.dart';
+import 'package:front/models/place.model.dart';
+import 'package:front/pages/register-page/widgets/visited-place.widget.dart';
 import 'package:front/providers/user.provider.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart' as GWS;
 
 class RegisterPlacePage extends StatefulWidget {
@@ -14,84 +14,32 @@ class RegisterPlacePage extends StatefulWidget {
 }
 
 class _RegisterPlacePageState extends State<RegisterPlacePage> {
-  GoogleMapController _mapController;
-  LocationData currentLocation;
-  Location location = Location();
-  bool _isLoadingCurrentPosition = false;
-  GWS.GoogleMapsPlaces _places =
-      GWS.GoogleMapsPlaces(apiKey: "AIzaSyBodQ0h0rcBh1l8bE3VAhwHCs1e31lPwKU");
-  List<GWS.PlacesSearchResult> places = [];
-  Set<Marker> _markers;
-  List<GWS.PlacesSearchResult> _nearbyPlaces = [];
+  bool _isRegistering = false;
 
-  void _onMapCreated(GoogleMapController controller) async {
-    _mapController = controller;
-    final location = await getCurrentLocation();
-    await getNearbyPlaces(location);
-  }
+  registerPlace(GWS.PlacesSearchResult placeData) async {
+    var now = DateTime.now();
+    final currentHour =
+        "${now.day}/0${now.month}/${now.year} ${now.hour - 3}:${now.minute}";
+    final departure =
+        "${now.day}/0${now.month}/${now.year} ${now.hour - 2}:${now.minute}";
+    final place = Place(
+        arrivalDate: currentHour,
+        departureDate: departure,
+        id: placeData.placeId);
 
-  getCurrentLocation() async {
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
     try {
-      serviceEnabled = await location.serviceEnabled();
-      if (!serviceEnabled) {
-        serviceEnabled = await location.requestService();
-        if (!serviceEnabled) {
-          throw Error();
-        }
-      }
-
-      permissionGranted = await location.hasPermission();
-      if (permissionGranted == PermissionStatus.denied) {
-        permissionGranted = await location.requestPermission();
-        if (permissionGranted != PermissionStatus.granted) {
-          throw Error();
-        }
-      }
-
       setState(() {
-        _isLoadingCurrentPosition = true;
+        _isRegistering = true;
       });
-      locationData = await location.getLocation();
+      await CTrackerAPI().registerUserPlace(
+          place, Provider.of<UserProvider>(context, listen: false).getUser());
       setState(() {
-        _isLoadingCurrentPosition = false;
+        _isRegistering = false;
       });
-
-      if (_mapController != null) {
-        _mapController.animateCamera(CameraUpdate.newCameraPosition(
-            new CameraPosition(
-                zoom: 18,
-                target:
-                    LatLng(locationData.latitude, locationData.longitude))));
-      }
-      return locationData;
+      Navigator.popUntil(context, ModalRoute.withName('/home'));
     } catch (e) {
       print(e);
     }
-  }
-
-  Future<void> getNearbyPlaces(LocationData currentLocation) async {
-    try {
-      final location = GWS.Location(
-          lat: currentLocation.latitude, lng: currentLocation.longitude);
-
-      final result = await _places.searchNearbyWithRadius(location, 500);
-      if (result.results.length > 0) {
-        setState(() {
-          _nearbyPlaces = result.results;
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  getClosestPlace(LatLng latLng) async {
-    final location = GWS.Location(lat: latLng.latitude, lng: latLng.longitude);
-    final result = await _places.searchNearbyWithRadius(location, 100);
-    print(result.results);
   }
 
   @override
@@ -109,41 +57,60 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
         ),
         backgroundColor: GlobalStyles.rgbColors['dark-gray'],
       ),
-      body: Container(
-        decoration: BoxDecoration(gradient: GlobalStyles.standardGradient),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: Column(
-              children: [
-                Container(
-                    alignment: Alignment.topLeft,
-                    child: Consumer<UserProvider>(
-                        builder: (context, user, child) => Text(
-                            "Registrar um novo estabelecimento",
-                            style: GlobalStyles.subtitleTextGradient))),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Container(
-                      alignment: Alignment.center,
-                      child: Consumer<UserProvider>(
-                          builder: (context, user, child) => Text(
-                              "Aqui você pode cadastrar um mestabelecimento ao qual você visitou, baseado na localização selecionada no mapa. \nCaso algum outro usuário que tenha visitado esse mesmo estabelecimento nos indique que está infectado, você será notificado.",
-                              style: GlobalStyles.standardSubtextGradient))),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(gradient: GlobalStyles.standardGradient),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Column(
+                  children: [
+                    Container(
+                        alignment: Alignment.topLeft,
+                        child: Consumer<UserProvider>(
+                            builder: (context, user, child) => Text(
+                                "Registrar um novo estabelecimento",
+                                style: GlobalStyles.subtitleTextGradient))),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Container(
+                          alignment: Alignment.center,
+                          child: Consumer<UserProvider>(
+                              builder: (context, user, child) => Text(
+                                  "Aqui você pode cadastrar um mestabelecimento ao qual você visitou, baseado na localização selecionada no mapa. \nCaso algum outro usuário que tenha visitado esse mesmo estabelecimento nos indique que está infectado, você será notificado.",
+                                  style:
+                                      GlobalStyles.standardSubtextGradient))),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ListView.builder(
+                            itemCount: Provider.of<UserProvider>(context,
+                                    listen: false)
+                                .getNearbyPlaces()
+                                .length,
+                            itemBuilder: (context, index) => NearbyPlaceCard(
+                                Provider.of<UserProvider>(context,
+                                        listen: false)
+                                    .getNearbyPlaces()[index],
+                                registerPlace)),
+                      ),
+                    )
+                  ],
                 ),
-                Container(
-                  height: 300,
-                  child: ListView.builder(
-                      itemCount:
-                          Provider.of<UserProvider>(context, listen: false)
-                              .getNearbyPlaces()
-                              .length,
-                      itemBuilder: (context, index) => Text('aa')),
-                )
-              ],
+              ),
             ),
           ),
-        ),
+          _isRegistering
+              ? _progressIndicator()
+              : SizedBox(
+                  height: 0,
+                )
+        ],
       ),
     );
   }

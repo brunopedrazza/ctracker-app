@@ -13,6 +13,7 @@ import 'package:front/providers/user.provider.dart';
 import 'package:provider/provider.dart';
 import 'package:front/apis/ctracker.api.dart';
 import '../../global.style.dart';
+import 'package:google_maps_webservice/places.dart' as GWS;
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,13 +25,8 @@ class _HomePageState extends State<HomePage> {
   bool isFetchingData = true;
   List<CountryData> countries = [];
   List<Place> _visitedPlaces;
-
-  Future<CountryData> fetchdata() async {
-    final response = await CovidDataAPI().fetchDataByCountry('brazil');
-    final countryData = CountryData.fromJson(jsonDecode(response.body));
-    return countryData;
-  }
-
+  GWS.GoogleMapsPlaces placesAPI =
+      GWS.GoogleMapsPlaces(apiKey: "AIzaSyBodQ0h0rcBh1l8bE3VAhwHCs1e31lPwKU");
   void initState() {
     super.initState();
 
@@ -38,7 +34,15 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final user = Provider.of<UserProvider>(context, listen: false).getUser();
       try {
-        final places = await CTrackerAPI().fetchUserPlaces(user);
+        final response = await CTrackerAPI().fetchUserPlaces(user);
+        final List<Place> places = [];
+        for (int i = 0; i < response.length; i++) {
+          final placeDetails =
+              await placesAPI.getDetailsByPlaceId(response[i].id);
+          response[i].vicinity = placeDetails.result.vicinity;
+          response[i].name = placeDetails.result.name;
+          places.add(response[i]);
+        }
 
         setState(() {
           _visitedPlaces = places;
@@ -49,6 +53,7 @@ class _HomePageState extends State<HomePage> {
           isFetchingData = false;
           requestError = true;
         });
+        print(e);
       }
     });
   }
@@ -116,21 +121,15 @@ class _HomePageState extends State<HomePage> {
                   ? _progressIndicator()
                   : requestError
                       ? _apiErrorMessage(context)
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                    height: 440,
-                                    child: ListView.builder(
-                                        itemCount: _visitedPlaces.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return PlaceCard();
-                                        }))
-                              ],
-                            ),
+                      : Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: ListView.builder(
+                                itemCount: _visitedPlaces.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return VisitedPlaceCard(
+                                      _visitedPlaces[index]);
+                                }),
                           ),
                         ),
             ],
@@ -138,6 +137,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: GlobalStyles.rgbColors['dark-gray'],
           onTap: (index) {
             switch (index) {
               case 0:
@@ -149,12 +149,15 @@ class _HomePageState extends State<HomePage> {
           },
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.local_hospital),
+              icon: Icon(
+                Icons.local_hospital_outlined,
+                color: Colors.white,
+              ),
               label: 'Estou Infectado',
               backgroundColor: Colors.red,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add_business),
+              icon: Icon(Icons.add_business, color: Colors.white),
               label: 'Cadastrar Estabelecimento',
               backgroundColor: Colors.red,
             )
