@@ -98,21 +98,18 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Container(
-                      alignment: Alignment.topLeft,
-                      child: Consumer<UserProvider>(
-                          builder: (context, user, child) => Text(
-                              AppLocalizations.of(context).welcomeName + "${user.getUser().firstName}!",
-                              style: GlobalStyles.subtitleTextGradient))),
-                ),
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                    alignment: Alignment.topLeft,
+                    child: Consumer<UserProvider>(
+                        builder: (context, user, child) => Text(
+                            AppLocalizations.of(context).welcomeName +
+                                "${user.getUser().firstName}!",
+                            style: GlobalStyles.subtitleTextGradient))),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                    AppLocalizations.of(context).latestPlacesMessage,
+                child: Text(AppLocalizations.of(context).latestPlacesMessage,
                     style: GlobalStyles.standardSubtextGradient),
               ),
               isFetchingData
@@ -125,7 +122,7 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               children: [
                                 Container(
-                                    height: 470,
+                                    height: 440,
                                     child: ListView.builder(
                                         itemCount: _visitedPlaces.length,
                                         itemBuilder:
@@ -136,32 +133,33 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-              _imInfectedButton(context)
             ],
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                break;
+              case 1:
+                Navigator.pushNamed(context, '/map');
+                break;
+            }
+          },
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.local_hospital),
+              label: 'Estou Infectado',
+              backgroundColor: Colors.red,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_business),
+              label: 'Cadastrar Estabelecimento',
+              backgroundColor: Colors.red,
+            )
+          ]),
     );
-  }
-
-  _imInfectedButton(context) {
-    return Consumer<UserProvider>(
-        builder: (context, user, child) => Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                  onPressed: () => {
-                    if (!user.getUser().notificationEnabled)
-                      {renderDialog()}
-                    else
-                      {Navigator.pushNamed(context, '/notify')}
-                  },
-                  child: Text(AppLocalizations.of(context).imInfected),
-                  style: HomePageStyles.infectedButton,
-                ),
-              ),
-            ));
   }
 }
 
