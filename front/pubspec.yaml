@@ -10,6 +10,8 @@ dependencies:
   http: ^0.13.1
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_dotenv: ^2.1.0
   google_fonts: ^2.0.0
   cupertino_icons: ^1.0.2
