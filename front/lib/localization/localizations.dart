@@ -26,7 +26,7 @@ class AppLocalizations {
       'error': 'An error has occurred. Please try again.',
       'email': 'Email',
       'password': 'Password',
-      'invalidEmailPassword': '',
+      'invalidEmailPassword': 'Invalid email or password. Please try again.',
       'login': 'Login',
       'signUp': 'Sign Up',
       'signUpMessage': 'Sign Up to our Platform!',

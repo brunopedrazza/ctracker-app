@@ -4,10 +4,12 @@ import 'package:front/models/country-data.model.dart';
 import 'package:front/models/place.model.dart';
 import 'package:front/pages/home/widgets/place-card.widget.dart';
 import 'package:front/providers/user.provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:front/apis/ctracker.api.dart';
 import '../../global.style.dart';
 import 'package:google_maps_webservice/places.dart' as GWS;
+import 'dart:io';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,7 +23,6 @@ class _HomePageState extends State<HomePage> {
   List<Place> _visitedPlaces;
   GWS.GoogleMapsPlaces placesAPI =
       GWS.GoogleMapsPlaces(apiKey: "AIzaSyBodQ0h0rcBh1l8bE3VAhwHCs1e31lPwKU");
-  bool _isNotifying = false;
 
   void initState() {
     super.initState();
@@ -112,14 +113,11 @@ class _HomePageState extends State<HomePage> {
       return;
     }
 
+    final image = await ImagePicker.pickImage(source: ImageSource.camera);
+    //@todo: Take image and convert to blob -> send to back
+
     try {
-      setState(() {
-        _isNotifying = true;
-      });
       await CTrackerAPI().notifyInfection(user, 'Tontura');
-      setState(() {
-        _isNotifying = false;
-      });
     } catch (e) {
       print(e);
     }
