@@ -200,17 +200,17 @@ class _HomePageState extends State<HomePage> {
               break;
           }
         },
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(
               Icons.local_hospital_outlined,
               color: Colors.red,
             ),
-            label: 'Estou Infectado',
+            label: AppLocalizations.of(context).imInfected,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add_business, color: Colors.white),
-            label: 'Cadastrar Estabelecimento',
+            label: AppLocalizations.of(context).registerPlaceHeader,
           )
         ],
         selectedItemColor: Colors.red,

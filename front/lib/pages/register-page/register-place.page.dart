@@ -21,11 +21,11 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
     final arrival = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
-        helpText: 'Horário de chegada');
+        helpText: AppLocalizations.of(context).arrivalTime);
     final departure = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.now(),
-        helpText: 'Horário de saída');
+        helpText: AppLocalizations.of(context).departureTime);
 
     if (arrival == null || departure == null) {
       renderDialog();
@@ -68,7 +68,7 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
               style: GlobalStyles.standardText,
             ),
             content: Text(
-              'Horário de chegada e saída devem ser definidos',
+              AppLocalizations.of(context).arrivalDepartureError,
               style: GlobalStyles.standardText,
             ),
             actions: [
@@ -89,7 +89,7 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register Place'),
+        title: Text(AppLocalizations.of(context).registerPlaceHeader),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded),
@@ -113,7 +113,7 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
                         alignment: Alignment.topLeft,
                         child: Consumer<UserProvider>(
                             builder: (context, user, child) => Text(
-                                "Registrar um novo estabelecimento",
+                                AppLocalizations.of(context).registerPlace,
                                 style: GlobalStyles.subtitleTextGradient))),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -121,7 +121,8 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
                           alignment: Alignment.center,
                           child: Consumer<UserProvider>(
                               builder: (context, user, child) => Text(
-                                  "Aqui você pode cadastrar um mestabelecimento ao qual você visitou, baseado na localização selecionada no mapa. \nCaso algum outro usuário que tenha visitado esse mesmo estabelecimento nos indique que está infectado, você será notificado.",
+                                  AppLocalizations.of(context)
+                                      .registerPlaceHelper,
                                   style:
                                       GlobalStyles.standardSubtextGradient))),
                     ),

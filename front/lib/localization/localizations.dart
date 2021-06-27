@@ -49,6 +49,14 @@ class AppLocalizations {
       'notificationError': 'An error occurred while trying to notify.',
       'alreadyNotified': 'You must await 30 days to notify again.',
       'successfullyNotified': 'Users were notified successfully.',
+      'arrivalDepartureError': 'Arrival and Departure time must be specified.',
+      'arrivalTime': 'Arrival time.',
+      'departureTime': 'Departure time.',
+      'registerPlace': 'Register a new place.',
+      'registerPlaceHelper':
+          'Here you can register a new place, based on your current location. \nIn case any user that has visited this place notify us that he | she  is infected, we will warn you.',
+      'findNearbyPlaces': 'Find nearby places',
+      'registerPlaceHeader': 'Register Place',
     },
     'es': {
       'welcome': 'Bienvenido a CTracker!',
@@ -123,6 +131,15 @@ class AppLocalizations {
       'alreadyNotified':
           'Você deve aguardar 30 dias até poder notificar novamente.',
       'successfullyNotified': 'Usuários foram notificados com sucesso.',
+      'arrivalDepartureError':
+          'Horário de chegada e saída devem ser especificados.',
+      'arrivalTime': 'Hora de chegada.',
+      'departureTime': 'Hora de saída.',
+      'registerPlace': 'Cadastrar um novo estabelecimento.',
+      'registerPlaceHelper':
+          'Aqui você pode cadastrar um mestabelecimento ao qual você visitou, baseado na localização selecionada no mapa. \nCaso algum outro usuário que tenha visitado esse mesmo estabelecimento nos indique que está infectado, você será notificado.',
+      'findNearbyPlaces': 'Buscar locais próximos',
+      'registerPlaceHeader': 'Cadastrar Estabelecimento',
     },
   };
 
@@ -252,6 +269,34 @@ class AppLocalizations {
 
   String get successfullyNotified {
     return _localizedValues[locale.languageCode]['successfullyNotified'];
+  }
+
+  String get arrivalDepartureError {
+    return _localizedValues[locale.languageCode]['arrivalDepartureError'];
+  }
+
+  String get arrivalTime {
+    return _localizedValues[locale.languageCode]['arrivalTime'];
+  }
+
+  String get departureTime {
+    return _localizedValues[locale.languageCode]['departureTime'];
+  }
+
+  String get registerPlace {
+    return _localizedValues[locale.languageCode]['registerPlace'];
+  }
+
+  String get registerPlaceHelper {
+    return _localizedValues[locale.languageCode]['registerPlaceHelper'];
+  }
+
+  String get findNearbyPlaces {
+    return _localizedValues[locale.languageCode]['findNearbyPlaces'];
+  }
+
+  String get registerPlaceHeader {
+    return _localizedValues[locale.languageCode]['registerPlaceHeader'];
   }
 }
 
