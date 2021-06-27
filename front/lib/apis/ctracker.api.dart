@@ -103,11 +103,39 @@ class CTrackerAPI {
         'departure_date': place.departureDate,
         'place_id': place.id,
       };
-      print(jsonEncode(body));
+
       final response = await http.post(
           Uri.http(
             '10.0.2.2:8000',
             '/api/place/register',
+          ),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-API-KEY':
+                'gszIi5Vynxx7AWUmpkTdSn1GsPo9twakuRg1KEO0JATkVFWctpPzZscNBet4zW6'
+          },
+          body: jsonEncode(body));
+
+      if (response.statusCode >= 400) {
+        throw new Error();
+      }
+    } catch (e) {
+      print(e);
+      throw new Error();
+    }
+  }
+
+  Future<void> notifyInfection(User user, String symptoms) async {
+    try {
+      final body = {
+        'user_email': user.email,
+        'symptoms': symptoms,
+      };
+
+      final response = await http.post(
+          Uri.http(
+            '10.0.2.2:8000',
+            '/api/notification',
           ),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
