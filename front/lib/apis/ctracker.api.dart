@@ -4,13 +4,14 @@ import 'package:front/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
 class CTrackerAPI {
-  static const url = 'c0428b72f76c.ngrok.io';
+  // Local docker: 10.0.2.2:8000
+  static const url = 'ccafc196a468.ngrok.io';
 
   Future<void> signup(User newUser) async {
     try {
       final response2 = await http.post(
           Uri.http(
-            '10.0.2.2:8000',
+            url,
             '/api/user/register',
           ),
           headers: <String, String>{
@@ -42,7 +43,7 @@ class CTrackerAPI {
     try {
       final response = await http.post(
           Uri.http(
-            '10.0.2.2:8000',
+            url,
             '/api/user/login',
           ),
           headers: <String, String>{
@@ -69,7 +70,7 @@ class CTrackerAPI {
     try {
       final response = await http.get(
           Uri.http(
-            '10.0.2.2:8000',
+            url,
             '/api/place/user/${user.email}',
           ),
           headers: <String, String>{
@@ -103,11 +104,39 @@ class CTrackerAPI {
         'departure_date': place.departureDate,
         'place_id': place.id,
       };
-      print(jsonEncode(body));
+
       final response = await http.post(
           Uri.http(
-            '10.0.2.2:8000',
+            url,
             '/api/place/register',
+          ),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-API-KEY':
+                'gszIi5Vynxx7AWUmpkTdSn1GsPo9twakuRg1KEO0JATkVFWctpPzZscNBet4zW6'
+          },
+          body: jsonEncode(body));
+
+      if (response.statusCode >= 400) {
+        throw new Error();
+      }
+    } catch (e) {
+      print(e);
+      throw new Error();
+    }
+  }
+
+  Future<void> notifyInfection(User user, String symptoms) async {
+    try {
+      final body = {
+        'user_email': user.email,
+        'symptoms': symptoms,
+      };
+
+      final response = await http.post(
+          Uri.http(
+            url,
+            '/api/notification',
           ),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',

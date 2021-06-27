@@ -18,13 +18,27 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
 
   registerPlace(GWS.PlacesSearchResult placeData) async {
     var now = DateTime.now();
-    final currentHour =
-        "${now.day}/0${now.month}/${now.year} ${now.hour - 3}:${now.minute}";
-    final departure =
-        "${now.day}/0${now.month}/${now.year} ${now.hour - 2}:${now.minute}";
+    final arrival = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        helpText: AppLocalizations.of(context).arrivalTime);
+    final departure = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        helpText: AppLocalizations.of(context).departureTime);
+
+    if (arrival == null || departure == null) {
+      renderDialog();
+    }
+
+    final formattedArrival =
+        '${now.day}/0${now.month}/${now.year} ${arrival.hour}:${arrival.minute}';
+    final formattedDeparture =
+        '${now.day}/0${now.month}/${now.year} ${departure.hour}:${departure.minute}';
+
     final place = Place(
-        arrivalDate: currentHour,
-        departureDate: departure,
+        arrivalDate: formattedArrival,
+        departureDate: formattedDeparture,
         id: placeData.placeId);
 
     try {
@@ -36,17 +50,46 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
       setState(() {
         _isRegistering = false;
       });
-      Navigator.popUntil(context, ModalRoute.withName('/home'));
+      Navigator.popUntil(context, ModalRoute.withName('/login'));
+      Navigator.pushNamed(context, '/home');
     } catch (e) {
       print(e);
     }
+  }
+
+  renderDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: GlobalStyles.rgbColors['light-gray'],
+            title: Text(
+              'Aviso',
+              style: GlobalStyles.standardText,
+            ),
+            content: Text(
+              AppLocalizations.of(context).arrivalDepartureError,
+              style: GlobalStyles.standardText,
+            ),
+            actions: [
+              TextButton(
+                  style: GlobalStyles.standardButton,
+                  onPressed: () => {
+                        Navigator.pop(context, 'OK'),
+                      },
+                  child: Text(
+                    "OK",
+                  ))
+            ],
+          );
+        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register Place'),
+        title: Text(AppLocalizations.of(context).registerPlaceHeader),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded),
@@ -70,7 +113,7 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
                         alignment: Alignment.topLeft,
                         child: Consumer<UserProvider>(
                             builder: (context, user, child) => Text(
-                                "Registrar um novo estabelecimento",
+                                AppLocalizations.of(context).registerPlace,
                                 style: GlobalStyles.subtitleTextGradient))),
                     Padding(
                       padding: const EdgeInsets.only(top: 10),
@@ -78,7 +121,8 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
                           alignment: Alignment.center,
                           child: Consumer<UserProvider>(
                               builder: (context, user, child) => Text(
-                                  "Aqui você pode cadastrar um mestabelecimento ao qual você visitou, baseado na localização selecionada no mapa. \nCaso algum outro usuário que tenha visitado esse mesmo estabelecimento nos indique que está infectado, você será notificado.",
+                                  AppLocalizations.of(context)
+                                      .registerPlaceHelper,
                                   style:
                                       GlobalStyles.standardSubtextGradient))),
                     ),

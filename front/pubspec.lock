@@ -89,7 +89,7 @@ packages:
       name: flutter_dotenv
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "5.0.0"
   flutter_google_places:
     dependency: "direct main"
     description:
@@ -161,6 +161,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  image_picker:
+    dependency: "direct main"
+    description:
+      name: image_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.5+3"
   intl:
     dependency: transitive
     description:
@@ -274,12 +281,12 @@ packages:
     source: hosted
     version: "1.8.0"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   path_provider_linux:
     dependency: transitive
     description:
