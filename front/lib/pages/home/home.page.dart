@@ -1,13 +1,7 @@
-import 'dart:convert';
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:front/apis/covid-data.api.dart';
 import 'package:front/localization/localizations.dart';
 import 'package:front/models/country-data.model.dart';
 import 'package:front/models/place.model.dart';
-import 'package:front/models/user.model.dart';
-import 'package:front/pages/home/home.style.dart';
-import 'package:front/pages/home/widgets/country-card.widget.dart';
 import 'package:front/pages/home/widgets/place-card.widget.dart';
 import 'package:front/providers/user.provider.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +21,8 @@ class _HomePageState extends State<HomePage> {
   List<Place> _visitedPlaces;
   GWS.GoogleMapsPlaces placesAPI =
       GWS.GoogleMapsPlaces(apiKey: "AIzaSyBodQ0h0rcBh1l8bE3VAhwHCs1e31lPwKU");
+  bool _isNotifying = false;
+
   void initState() {
     super.initState();
 
@@ -58,14 +54,38 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  renderDialog() {
+  renderDialog(messageType) {
+    String messageText;
+
+    switch (messageType) {
+      case 1:
+        // Trying to notify whithout places.
+        messageText = AppLocalizations.of(context).onePlaceNeeded;
+        break;
+      case 2:
+        // Error while fetching places.
+        messageText = AppLocalizations.of(context).placesFetchError;
+        break;
+      case 3:
+        // Error while notifying.
+        messageText = AppLocalizations.of(context).notificationError;
+        break;
+      case 4:
+        // User already notified.
+        messageText = AppLocalizations.of(context).alreadyNotified;
+        break;
+      case 5:
+        // User already notified.
+        messageText = AppLocalizations.of(context).successfullyNotified;
+        break;
+    }
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             backgroundColor: GlobalStyles.rgbColors['light-gray'],
             title: Text(
-              AppLocalizations.of(context).disabledNotifyMessage,
+              messageText,
               style: GlobalStyles.standardText,
             ),
             actions: [
@@ -80,6 +100,29 @@ class _HomePageState extends State<HomePage> {
             ],
           );
         });
+  }
+
+  notify() async {
+    final user = Provider.of<UserProvider>(context, listen: false).getUser();
+    if (_visitedPlaces.length == 0) {
+      renderDialog(1);
+      return;
+    } else if (!user.notificationEnabled) {
+      renderDialog(4);
+      return;
+    }
+
+    try {
+      setState(() {
+        _isNotifying = true;
+      });
+      await CTrackerAPI().notifyInfection(user, 'Tontura');
+      setState(() {
+        _isNotifying = false;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -121,47 +164,59 @@ class _HomePageState extends State<HomePage> {
                   ? _progressIndicator()
                   : requestError
                       ? _apiErrorMessage(context)
-                      : Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: ListView.builder(
-                                itemCount: _visitedPlaces.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return VisitedPlaceCard(
-                                      _visitedPlaces[index]);
-                                }),
-                          ),
-                        ),
+                      : _visitedPlaces.length == 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 20),
+                              child: Text(
+                                'Nenhum estabelecimento cadastrado.',
+                                style: GlobalStyles.standardSubtextGradient,
+                              ),
+                            )
+                          : Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 15),
+                                child: ListView.builder(
+                                    itemCount: _visitedPlaces.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return VisitedPlaceCard(
+                                          _visitedPlaces[index]);
+                                    }),
+                              ),
+                            ),
+              _isNotifying ? _progressIndicator() : renderDialog(5)
             ],
           ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: GlobalStyles.rgbColors['dark-gray'],
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                break;
-              case 1:
-                Navigator.pushNamed(context, '/map');
-                break;
-            }
-          },
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.local_hospital_outlined,
-                color: Colors.white,
-              ),
-              label: 'Estou Infectado',
-              backgroundColor: Colors.red,
+        backgroundColor: GlobalStyles.rgbColors['dark-gray'],
+        onTap: (index) async {
+          switch (index) {
+            case 0:
+              await notify();
+              break;
+            case 1:
+              Navigator.pushNamed(context, '/map');
+              break;
+          }
+        },
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.local_hospital_outlined,
+              color: Colors.red,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.add_business, color: Colors.white),
-              label: 'Cadastrar Estabelecimento',
-              backgroundColor: Colors.red,
-            )
-          ]),
+            label: 'Estou Infectado',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_business, color: Colors.white),
+            label: 'Cadastrar Estabelecimento',
+          )
+        ],
+        selectedItemColor: Colors.red,
+        unselectedItemColor: Colors.white,
+      ),
     );
   }
 }
