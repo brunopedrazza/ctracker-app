@@ -10,7 +10,7 @@ class CTrackerAPI {
     try {
       final response2 = await http.post(
           Uri.http(
-            url,
+            '10.0.2.2:8000',
             '/api/user/register',
           ),
           headers: <String, String>{
@@ -42,7 +42,7 @@ class CTrackerAPI {
     try {
       final response = await http.post(
           Uri.http(
-            url,
+            '10.0.2.2:8000',
             '/api/user/login',
           ),
           headers: <String, String>{
@@ -69,7 +69,7 @@ class CTrackerAPI {
     try {
       final response = await http.get(
           Uri.http(
-            url,
+            '10.0.2.2:8000',
             '/api/place/user/${user.email}',
           ),
           headers: <String, String>{
@@ -89,6 +89,36 @@ class CTrackerAPI {
       }
 
       return allVisitedPlaces;
+    } catch (e) {
+      print(e);
+      throw new Error();
+    }
+  }
+
+  Future<void> registerUserPlace(Place place, User user) async {
+    try {
+      final body = {
+        'user_email': user.email,
+        'arrival_date': place.arrivalDate,
+        'departure_date': place.departureDate,
+        'place_id': place.id,
+      };
+      print(jsonEncode(body));
+      final response = await http.post(
+          Uri.http(
+            '10.0.2.2:8000',
+            '/api/place/register',
+          ),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-API-KEY':
+                'gszIi5Vynxx7AWUmpkTdSn1GsPo9twakuRg1KEO0JATkVFWctpPzZscNBet4zW6'
+          },
+          body: jsonEncode(body));
+
+      if (response.statusCode >= 400) {
+        throw new Error();
+      }
     } catch (e) {
       print(e);
       throw new Error();

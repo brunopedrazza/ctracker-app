@@ -13,6 +13,7 @@ import 'package:front/providers/user.provider.dart';
 import 'package:provider/provider.dart';
 import 'package:front/apis/ctracker.api.dart';
 import '../../global.style.dart';
+import 'package:google_maps_webservice/places.dart' as GWS;
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,13 +25,8 @@ class _HomePageState extends State<HomePage> {
   bool isFetchingData = true;
   List<CountryData> countries = [];
   List<Place> _visitedPlaces;
-
-  Future<CountryData> fetchdata() async {
-    final response = await CovidDataAPI().fetchDataByCountry('brazil');
-    final countryData = CountryData.fromJson(jsonDecode(response.body));
-    return countryData;
-  }
-
+  GWS.GoogleMapsPlaces placesAPI =
+      GWS.GoogleMapsPlaces(apiKey: "AIzaSyBodQ0h0rcBh1l8bE3VAhwHCs1e31lPwKU");
   void initState() {
     super.initState();
 
@@ -38,7 +34,15 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final user = Provider.of<UserProvider>(context, listen: false).getUser();
       try {
-        final places = await CTrackerAPI().fetchUserPlaces(user);
+        final response = await CTrackerAPI().fetchUserPlaces(user);
+        final List<Place> places = [];
+        for (int i = 0; i < response.length; i++) {
+          final placeDetails =
+              await placesAPI.getDetailsByPlaceId(response[i].id);
+          response[i].vicinity = placeDetails.result.vicinity;
+          response[i].name = placeDetails.result.name;
+          places.add(response[i]);
+        }
 
         setState(() {
           _visitedPlaces = places;
@@ -49,6 +53,7 @@ class _HomePageState extends State<HomePage> {
           isFetchingData = false;
           requestError = true;
         });
+        print(e);
       }
     });
   }
@@ -98,70 +103,66 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
-                  child: Container(
-                      alignment: Alignment.topLeft,
-                      child: Consumer<UserProvider>(
-                          builder: (context, user, child) => Text(
-                              AppLocalizations.of(context).welcomeName + "${user.getUser().firstName}!",
-                              style: GlobalStyles.subtitleTextGradient))),
-                ),
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Container(
+                    alignment: Alignment.topLeft,
+                    child: Consumer<UserProvider>(
+                        builder: (context, user, child) => Text(
+                            AppLocalizations.of(context).welcomeName +
+                                "${user.getUser().firstName}!",
+                            style: GlobalStyles.subtitleTextGradient))),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                    AppLocalizations.of(context).latestPlacesMessage,
+                child: Text(AppLocalizations.of(context).latestPlacesMessage,
                     style: GlobalStyles.standardSubtextGradient),
               ),
               isFetchingData
                   ? _progressIndicator()
                   : requestError
                       ? _apiErrorMessage(context)
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                    height: 470,
-                                    child: ListView.builder(
-                                        itemCount: _visitedPlaces.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return PlaceCard();
-                                        }))
-                              ],
-                            ),
+                      : Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: ListView.builder(
+                                itemCount: _visitedPlaces.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return VisitedPlaceCard(
+                                      _visitedPlaces[index]);
+                                }),
                           ),
                         ),
-              _imInfectedButton(context)
             ],
           ),
         ),
       ),
-    );
-  }
-
-  _imInfectedButton(context) {
-    return Consumer<UserProvider>(
-        builder: (context, user, child) => Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                  onPressed: () => {
-                    if (!user.getUser().notificationEnabled)
-                      {renderDialog()}
-                    else
-                      {Navigator.pushNamed(context, '/notify')}
-                  },
-                  child: Text(AppLocalizations.of(context).imInfected),
-                  style: HomePageStyles.infectedButton,
-                ),
+      bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: GlobalStyles.rgbColors['dark-gray'],
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                break;
+              case 1:
+                Navigator.pushNamed(context, '/map');
+                break;
+            }
+          },
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.local_hospital_outlined,
+                color: Colors.white,
               ),
-            ));
+              label: 'Estou Infectado',
+              backgroundColor: Colors.red,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add_business, color: Colors.white),
+              label: 'Cadastrar Estabelecimento',
+              backgroundColor: Colors.red,
+            )
+          ]),
+    );
   }
 }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:front/localization/localizations.dart';
 import 'package:front/pages/home/home.page.dart';
+import 'package:front/pages/map.page.dart';
+import 'package:front/pages/register-page/register-place.page.dart';
 import 'package:front/pages/signup.page.dart';
 import 'package:front/providers/user.provider.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +42,9 @@ class CTracker extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/login': (BuildContext context) => LoginPage(),
         '/signup': (BuildContext context) => SignUpPage(),
-        '/home': (BuildContext context) => HomePage()
+        '/home': (BuildContext context) => HomePage(),
+        '/register-place': (BuildContext context) => RegisterPlacePage(),
+        '/map': (BuildContext context) => MapPage()
       },
     );
   }

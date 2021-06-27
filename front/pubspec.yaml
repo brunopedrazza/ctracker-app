@@ -18,7 +18,8 @@ dependencies:
   crypto: ^3.0.1
   provider: ^5.0.0
   google_maps_flutter: ^0.5.25+1
-
+  location: ^4.2.0
+  flutter_google_places: ^0.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
