@@ -184,7 +184,6 @@ class _HomePageState extends State<HomePage> {
                                     }),
                               ),
                             ),
-              _isNotifying ? _progressIndicator() : renderDialog(5)
             ],
           ),
         ),
