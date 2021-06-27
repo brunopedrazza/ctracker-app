@@ -18,13 +18,27 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
 
   registerPlace(GWS.PlacesSearchResult placeData) async {
     var now = DateTime.now();
-    final currentHour =
-        "${now.day}/0${now.month}/${now.year} ${now.hour - 3}:${now.minute}";
-    final departure =
-        "${now.day}/0${now.month}/${now.year} ${now.hour - 2}:${now.minute}";
+    final arrival = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        helpText: 'Horário de chegada');
+    final departure = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+        helpText: 'Horário de saída');
+
+    if (arrival == null || departure == null) {
+      renderDialog();
+    }
+
+    final formattedArrival =
+        '${now.day}/0${now.month}/${now.year} ${arrival.hour}:${arrival.minute}';
+    final formattedDeparture =
+        '${now.day}/0${now.month}/${now.year} ${departure.hour}:${departure.minute}';
+
     final place = Place(
-        arrivalDate: currentHour,
-        departureDate: departure,
+        arrivalDate: formattedArrival,
+        departureDate: formattedDeparture,
         id: placeData.placeId);
 
     try {
@@ -36,10 +50,39 @@ class _RegisterPlacePageState extends State<RegisterPlacePage> {
       setState(() {
         _isRegistering = false;
       });
-      Navigator.popUntil(context, ModalRoute.withName('/home'));
+      Navigator.popUntil(context, ModalRoute.withName('/login'));
+      Navigator.pushNamed(context, '/home');
     } catch (e) {
       print(e);
     }
+  }
+
+  renderDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: GlobalStyles.rgbColors['light-gray'],
+            title: Text(
+              'Aviso',
+              style: GlobalStyles.standardText,
+            ),
+            content: Text(
+              'Horário de chegada e saída devem ser definidos',
+              style: GlobalStyles.standardText,
+            ),
+            actions: [
+              TextButton(
+                  style: GlobalStyles.standardButton,
+                  onPressed: () => {
+                        Navigator.pop(context, 'OK'),
+                      },
+                  child: Text(
+                    "OK",
+                  ))
+            ],
+          );
+        });
   }
 
   @override
