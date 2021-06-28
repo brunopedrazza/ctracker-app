@@ -1,3 +1,5 @@
+[![Build status](https://dev.azure.com/pedrazzabruno/ctracker/_apis/build/status/ctracker)](https://dev.azure.com/pedrazzabruno/ctracker/_build/latest?definitionId=2)
+
 # Backend
 
 &emsp;O _backend_ do projeto está escrito em Python, com o framework Django. A responsabilidade desse componente é de expor diversos endpoints por meio de uma API privada, além de executar algumas tarefas que precisam ser realizadas de tempos em tempos. Os dados estão sendo armazenados em um banco não-relacional PostgreSQL, escolhido pelo motivo de melhor compatibilidade com o _framework_.
