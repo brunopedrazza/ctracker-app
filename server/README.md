@@ -1,4 +1,4 @@
-https://dev.azure.com/pedrazzabruno/ctracker/_apis/build/status/ctracker?branchName=master
+[<img src="https://dev.azure.com/pedrazzabruno/ctracker/_apis/build/status/ctracker?branchName=master">](https://dev.azure.com/pedrazzabruno/ctracker/_build/latest?definitionId=2)
 
 # Backend
 
