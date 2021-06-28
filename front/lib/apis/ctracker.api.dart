@@ -4,7 +4,7 @@ import 'package:front/models/user.model.dart';
 import 'package:http/http.dart' as http;
 
 class CTrackerAPI {
-  static const url = '10.0.2.2:8000';
+  static const url = 'ctracker-server.azurewebsites.net';
 
   Future<void> signup(User newUser) async {
     try {
