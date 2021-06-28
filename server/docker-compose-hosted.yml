@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  ctracker_server:
+    container_name: ctracker_server
+    image: ctracker.azurecr.io/ctracker_server:#{Build.BuildId}
+    build: .
+    command: python manage.py runserver --nostatic 0.0.0.0:8000
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/usr/src/app
+    ports:
+      - 8000:8000
+  ctracker_poll_unprocessed_notifications:
+    container_name: ctracker_poll_unprocessed_notifications
+    image: ctracker.azurecr.io/ctracker_poll_unprocessed_notifications:#{Build.BuildId}
+    build: .
+    depends_on:
+      - ctracker_server
+    command: python manage.py poll_unprocessed_notifications --loop --interval 30
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/usr/src/app
+  ctracker_poll_unnotified_registers:
+    container_name: ctracker_poll_unnotified_registers
+    image: ctracker.azurecr.io/ctracker_poll_unnotified_registers:#{Build.BuildId}
+    build: .
+    depends_on:
+      - ctracker_server
+    command: python manage.py poll_unnotified_registers --loop --interval 60
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/usr/src/app
+  ctracker_check_enable_notification:
+    container_name: ctracker_check_enable_notification
+    image: ctracker.azurecr.io/ctracker_check_enable_notification:#{Build.BuildId}
+    build: .
+    depends_on:
+      - ctracker_server
+    command: python manage.py check_enable_notification --loop --interval 60
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/usr/src/app
