@@ -14,6 +14,7 @@ INIT=fakeinit\n\
 WEBAPP_STORAGE_HOME=fakehome\n\
 HOST_URL=https://fake.com\n\
 DJANGO_SECRET_KEY=notsosecretkey\n\
+SERVER_API_KEY=notsosecretkey\n\
 ' >> /code/ctracker/.env; fi
 
 EXPOSE 8000
