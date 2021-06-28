@@ -11,8 +11,9 @@ COPY manage.py /code
 
 RUN if [ ! -f /code/ctracker/.env ]; then echo $'\
 INIT=fakeinit\n\
+WEBAPP_STORAGE_HOME=fakehome\n\
 HOST_URL=https://fake.com\n\
-SERVER_API_KEY=notsosecretkey\n\
+DJANGO_SECRET_KEY=notsosecretkey\n\
 ' >> /code/ctracker/.env; fi
 
 EXPOSE 8000
