@@ -8,11 +8,9 @@ import 'package:front/providers/user.provider.dart';
 import 'package:provider/provider.dart';
 import './pages/login.page.dart';
 import './pages/splash.page.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
-  await DotEnv().load('.env');
   runApp(ChangeNotifierProvider(
     create: (context) => UserProvider(),
     child: CTracker(),

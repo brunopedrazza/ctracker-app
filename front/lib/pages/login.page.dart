@@ -17,26 +17,10 @@ class _LoginPageState extends State<LoginPage> {
   String _email;
   String _password;
   bool _isValidating = false;
-  bool _isAlreadyLoggedIn = false;
   Map<String, Map<String, Object>> _invalidInputs = {
     'email': {'error': false, 'message': ''},
     'password': {'error': false, 'message': ''},
   };
-
-  void initState() {
-    super.initState();
-    if (_isAlreadyLoggedIn) {
-      setState(() {
-        _email =
-            Provider.of<UserProvider>(context, listen: false).getUser().email;
-        _password = "**********";
-      });
-    }
-    setState(() {
-      _isAlreadyLoggedIn =
-          Provider.of<UserProvider>(context, listen: false).isLoggedIn();
-    });
-  }
 
   setEmail(text) {
     setState(() {
@@ -84,10 +68,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   login(BuildContext context) async {
-    if (_isAlreadyLoggedIn) {
-      Navigator.pushNamed(context, '/home');
-    }
-
     if (!validInputs()) {
       return;
     }
@@ -103,6 +83,10 @@ class _LoginPageState extends State<LoginPage> {
         _isValidating = false;
       });
       Provider.of<UserProvider>(context, listen: false).setUser(user);
+      setState(() {
+        _email = null;
+        _password = null;
+      });
       Navigator.pushNamed(context, '/home');
     } catch (e) {
       setState(() {
