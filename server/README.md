@@ -1,5 +1,4 @@
-
-[![name]('https://dev.azure.com/pedrazzabruno/ctracker/_apis/build/status/ctracker?branchName=master')](https://dev.azure.com/pedrazzabruno/ctracker/_build/latest?definitionId=2)
+[![Build status](https://dev.azure.com/pedrazzabruno/ctracker/_apis/build/status/ctracker)](https://dev.azure.com/pedrazzabruno/ctracker/_build/latest?definitionId=2)
 
 # Backend
 
