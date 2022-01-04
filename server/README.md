@@ -2,7 +2,7 @@
 
 # Backend
 
-&emsp;O _backend_ do projeto está escrito em Python, com o framework Django. A responsabilidade desse componente é de expor diversos endpoints por meio de uma API privada, além de executar algumas tarefas que precisam ser realizadas de tempos em tempos. Os dados estão sendo armazenados em um banco não-relacional PostgreSQL, escolhido pelo motivo de melhor compatibilidade com o _framework_.
+&emsp;O _backend_ do projeto está escrito em Python, com o framework Django. A responsabilidade desse componente é de expor diversos endpoints por meio de uma API privada, além de executar algumas tarefas que precisam ser realizadas de tempos em tempos. Os dados estão sendo armazenados em um banco PostgreSQL, escolhido pelo motivo de melhor compatibilidade com o _framework_.
 
 &emsp;Toda a lógica de negócio do aplicativo está implementada neste componente, fazendo com que a única responsabilidade da aplicação em _Flutter_ seja a de oferecer uma interface amigável e fluida para a interação dos usuários do aplicativo com os dados em si.
 
